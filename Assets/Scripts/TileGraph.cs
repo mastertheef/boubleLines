@@ -56,7 +56,7 @@ public class TileGraph : MonoBehaviour {
         }
     }
 
-    public void AddBall(int x, int y, Ball ball)
+    public void AddBall(int x, int y, GameObject ball)
     {
         tileNodes[x, y].ball = ball;
         nodesWithBalls.Add(tileNodes[x, y]);
@@ -118,7 +118,7 @@ public class TileGraph : MonoBehaviour {
                 : null;
 
             while (currentNode != null && neighbourNode != null && 
-                currentNode.ball != null && neighbourNode.ball != null && currentNode.ball.Color == neighbourNode.ball.Color)
+                currentNode.ball != null && neighbourNode.ball != null && currentNode.ball.GetComponentInChildren<Ball>().Color == neighbourNode.ball.GetComponentInChildren<Ball>().Color)
             {
                 line.Add(neighbourNode);
                 neighbourX += (int)dir.x;

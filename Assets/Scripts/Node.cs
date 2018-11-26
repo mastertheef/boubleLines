@@ -13,7 +13,7 @@ public class Node
     public NodeType nodeType;
     public int x, y = -1; // matrix coordinates
     public Vector2 tileCoordinates;
-    public Ball ball;
+    public GameObject ball;
     public TileView tile;
 
     public List<Node> neighbourNodes;

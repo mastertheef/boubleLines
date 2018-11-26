@@ -68,19 +68,17 @@ public class GameController : MonoBehaviour
         {
             var hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
 
-
             if (hit.collider != null)
             {
                 if (hit.transform.tag == "Tile")
                 {
                     var tile = hit.transform.gameObject.GetComponent<TileView>();
 
-
-                    if (startNode == null && tile.node.ball != null)
+                    if (hasBall(tile))
                     {
-                        startNode = tile.node;
+                        Select(tile);
                     }
-                    else if (startNode != null && tile.node.ball == null)
+                    else if (isSelected())
                     {
                         endNode = tile.node;
 
@@ -93,14 +91,14 @@ public class GameController : MonoBehaviour
                             tileGraph.AnalizeAndDestroyBalls(lineLength);
                             tileGraph.InitNeighbours();
                         }
-                        
+
 
                         //path.ForEach(x => x.tile.GetComponent<SpriteRenderer>().color = Color.red);
 
-                        startNode = null;
+                        Deselect();
                         endNode = null;
                         pathFinder.Init(tileGraph);
-                        
+
                     }
                 }
             }
@@ -113,11 +111,38 @@ public class GameController : MonoBehaviour
         {
             var ball = Instantiate(ballPrefab, Vector3.zero, Quaternion.identity);
             ball.transform.position = new Vector2(tileSize.x * coords.x - offset, tileSize.y * coords.y - offset);
-            ball.GetComponent<Ball>().Color = possibleColors[Random.Range(0, possibleColors.Length)];
-            tileGraph.AddBall((int)coords.x, (int)coords.y, ball.GetComponent<Ball>());
+            ball.GetComponentInChildren<Ball>().Color = possibleColors[Random.Range(0, possibleColors.Length)];
+            tileGraph.AddBall((int)coords.x, (int)coords.y, ball);
             return true;
         }
 
         return false;
+    }
+
+    private bool isSelected()
+    {
+        return startNode != null;
+    }
+
+    private bool hasBall(TileView tile)
+    {
+        return tile.node.ball != null;
+    }
+
+    private void  Select(TileView tile)
+    {
+        if (startNode != null)
+        {
+            startNode.ball.GetComponentInChildren<Ball>().Deselect();
+        }
+
+        startNode = tile.node;
+        startNode.ball.GetComponentInChildren<Ball>().Select();
+    }
+
+    private void Deselect()
+    {
+        endNode.ball.GetComponentInChildren<Ball>().Deselect();
+        startNode = null;
     }
 }
