@@ -142,7 +142,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   width: 7
   height: 7
-  startingCloseTiles: 3
+  startingCloseTiles: 0
 --- !u!4 &161429796
 Transform:
   m_ObjectHideFlags: 0
@@ -309,6 +309,7 @@ MonoBehaviour:
   lineLength: 5
   startingBallCount: 3
   ballsPerTurn: 2
+  ballSpeed: 1
   possibleColors:
   - {r: 0.6144502, g: 0.30709326, b: 0.9716981, a: 1}
   - {r: 1, g: 0.33490568, b: 0.38969827, a: 1}
@@ -357,6 +358,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ed8e15d0399e194d983f33d14a4bfbe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ballAcceleration: 0.7
 --- !u!114 &1702475748
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -5,7 +5,6 @@ using System.Linq;
 
 public class GameController : MonoBehaviour
 {
-
     public TileMatrix tileMatrix;
     public TileGraph tileGraph;
     public GameObject tileViewPrefab;
@@ -14,6 +13,7 @@ public class GameController : MonoBehaviour
     public int lineLength = 3;
     public int startingBallCount = 3;
     public int ballsPerTurn = 2;
+    public float ballSpeed = 5;
 
     public Color[] possibleColors;
 
@@ -29,7 +29,7 @@ public class GameController : MonoBehaviour
         currentMatrix = tileMatrix.MakeStartMap();
         
         tileGraph.Init(currentMatrix);
-        
+        tileGraph.OnBallMoved += OnBallMoved;
 
         var graphView = tileGraph.gameObject.GetComponent<TileGraphView>();
         graphView.tileViewPrefab = tileViewPrefab;
@@ -86,10 +86,7 @@ public class GameController : MonoBehaviour
 
                         if (path.Contains(startNode) && path.Contains(endNode))
                         {
-                            tileGraph.MoveBall(startNode, endNode);
-                            GenerateBalls(ballsPerTurn);
-                            tileGraph.AnalizeAndDestroyBalls(lineLength);
-                            tileGraph.InitNeighbours();
+                            StartCoroutine(tileGraph.MoveBall(path, ballSpeed));
                         }
 
 
@@ -105,11 +102,19 @@ public class GameController : MonoBehaviour
         }
     }
 
+    private void OnBallMoved()
+    {
+        GenerateBalls(ballsPerTurn);
+        tileGraph.AnalizeAndDestroyBalls(lineLength);
+        tileGraph.InitNeighbours();
+    }
+   
     private bool addBall(Vector2 coords)
     {
         if (!tileGraph.nodesWithBalls.Any(x => x.x == coords.x && x.y == coords.y))
         {
             var ball = Instantiate(ballPrefab, Vector3.zero, Quaternion.identity);
+            
             ball.transform.position = new Vector2(tileSize.x * coords.x - offset, tileSize.y * coords.y - offset);
             ball.GetComponentInChildren<Ball>().Color = possibleColors[Random.Range(0, possibleColors.Length)];
             tileGraph.AddBall((int)coords.x, (int)coords.y, ball);
@@ -142,7 +147,10 @@ public class GameController : MonoBehaviour
 
     private void Deselect()
     {
-        endNode.ball.GetComponentInChildren<Ball>().Deselect();
+        if (endNode != null && endNode.ball != null)
+        {
+            endNode.ball.GetComponentInChildren<Ball>().Deselect();
+        }
         startNode = null;
     }
 }

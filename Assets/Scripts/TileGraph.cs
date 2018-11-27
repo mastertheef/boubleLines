@@ -8,9 +8,14 @@ public class TileGraph : MonoBehaviour {
     public Node[,] tileNodes;
     public List<Node> nodesWithBalls = new List<Node>();
     int width, height;
+    public float ballAcceleration = 0.1f;
+
 
     public int Width { get { return width; } }
     public int Height { get { return height; } }
+
+    public delegate void BallMovedHandler();
+    public event BallMovedHandler OnBallMoved;
 
     public static readonly Vector2[] directions =
     {
@@ -74,16 +79,36 @@ public class TileGraph : MonoBehaviour {
         RemoveBall(node.x, node.y);
     }
 
-    public void MoveBall(Node start, Node end)
+    private void MoveBall(Node start, Node end)
     {
         if (start.ball != null && end.ball == null)
         {
-            start.ball.transform.position = end.tile.transform.position;
+            //start.ball.transform.position = end.tile.transform.position;
             end.ball = start.ball;
             start.ball = null;
             nodesWithBalls.Remove(start);
             nodesWithBalls.Add(end);
         }
+    }
+
+    public IEnumerator MoveBall(List<Node> path, float speed)
+    {
+        var pathQueue = new Queue<Node>(path);
+        var start = pathQueue.Dequeue();
+        start.ball.GetComponentInChildren<Ball>().Deselect();
+        while (pathQueue.Any())
+        {
+            var next = pathQueue.Dequeue();
+            while (start.ball.transform.position != next.tile.transform.position)
+            {
+                start.ball.transform.position = Vector2.MoveTowards(start.ball.transform.position, next.tile.transform.position, speed * Time.deltaTime);
+                speed += ballAcceleration;
+                yield return null;
+            }
+        }
+        
+        MoveBall(path.First(), path.Last());
+        OnBallMoved();
     }
 
     public void AnalizeAndDestroyBalls(int minLineLength)

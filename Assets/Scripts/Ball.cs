@@ -9,6 +9,7 @@ public class Ball : MonoBehaviour {
     private void Start()
     {
         anim = GetComponentInParent<Animator>();
+        anim.SetTrigger("appear");
     }
 
     public void Select()
