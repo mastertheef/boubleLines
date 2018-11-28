@@ -111,7 +111,7 @@ public class TileGraph : MonoBehaviour {
         OnBallMoved();
     }
 
-    public void AnalizeAndDestroyBalls(int minLineLength)
+    public void AnalizeAndDestroyBalls(int minLineLength, GameObject destroyEffect)
     {
         List<Node> nodeBallsToDestroy = new List<Node>();
         foreach (var ballNode in nodesWithBalls)
@@ -120,9 +120,17 @@ public class TileGraph : MonoBehaviour {
         }
 
         var distinctList = nodeBallsToDestroy.Distinct().ToList();
-        foreach (var ballNode in distinctList)
+        if (distinctList.Any())
         {
-            RemoveBall(ballNode);
+            var color = distinctList[0].ball.GetComponentInChildren<Ball>().Color;
+            foreach (var ballNode in distinctList)
+            {
+                var blow = Instantiate(destroyEffect, ballNode.tile.transform.position, Quaternion.identity);
+                var blowMain = blow.GetComponent<ParticleSystem>().main;
+                blowMain.startColor = color;
+                RemoveBall(ballNode);
+                StartCoroutine(Camera.main.GetComponent<RipplePostProcessor>().Ripple(ballNode.tile.transform.position));
+            }
         }
 
         InitNeighbours();

@@ -9,7 +9,10 @@ public class GameController : MonoBehaviour
     public TileGraph tileGraph;
     public GameObject tileViewPrefab;
     public GameObject ballPrefab;
+    public GameObject destroyEffectPrefab;
+
     public PathFinder pathFinder;
+    public SoundController soundController;
     public int lineLength = 3;
     public int startingBallCount = 3;
     public int ballsPerTurn = 2;
@@ -105,8 +108,9 @@ public class GameController : MonoBehaviour
     private void OnBallMoved()
     {
         GenerateBalls(ballsPerTurn);
-        tileGraph.AnalizeAndDestroyBalls(lineLength);
+        tileGraph.AnalizeAndDestroyBalls(lineLength, destroyEffectPrefab);
         tileGraph.InitNeighbours();
+        soundController.PlayMove();
     }
    
     private bool addBall(Vector2 coords)
