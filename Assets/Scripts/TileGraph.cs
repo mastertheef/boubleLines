@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Assets.Scripts.Models;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -14,7 +15,7 @@ public class TileGraph : MonoBehaviour {
     public int Width { get { return width; } }
     public int Height { get { return height; } }
 
-    public delegate void BallMovedHandler();
+    public delegate void BallMovedHandler(Node target);
     public event BallMovedHandler OnBallMoved;
 
     public static readonly Vector2[] directions =
@@ -108,20 +109,22 @@ public class TileGraph : MonoBehaviour {
         }
         
         MoveBall(path.First(), path.Last());
-        OnBallMoved();
+        OnBallMoved(path.Last());
     }
 
-    public void AnalizeAndDestroyBalls(int minLineLength, GameObject destroyEffect)
+    public void DestroyBalls(FoundLines lines, Node startNode, GameObject destroyEffect)
     {
         List<Node> nodeBallsToDestroy = new List<Node>();
-        foreach (var ballNode in nodesWithBalls)
-        {
-            nodeBallsToDestroy.AddRange(getNodeLines(ballNode, minLineLength));
-        }
+        nodeBallsToDestroy.AddRange(lines.horizontal);
+        nodeBallsToDestroy.AddRange(lines.vertical);
+        nodeBallsToDestroy.AddRange(lines.leftDiag);
+        nodeBallsToDestroy.AddRange(lines.rightDiag);
 
         var distinctList = nodeBallsToDestroy.Distinct().ToList();
         if (distinctList.Any())
         {
+            StartCoroutine(Camera.main.GetComponent<RipplePostProcessor>().Ripple(startNode.tile.transform.position));
+
             var color = distinctList[0].ball.GetComponentInChildren<Ball>().Color;
             foreach (var ballNode in distinctList)
             {
@@ -129,11 +132,67 @@ public class TileGraph : MonoBehaviour {
                 var blowMain = blow.GetComponent<ParticleSystem>().main;
                 blowMain.startColor = color;
                 RemoveBall(ballNode);
-                StartCoroutine(Camera.main.GetComponent<RipplePostProcessor>().Ripple(ballNode.tile.transform.position));
+                
             }
         }
 
         InitNeighbours();
+    }
+
+    public FoundLines FindLines(Node node, int minLineLength)
+    {
+        var result = new FoundLines();
+
+        List<Node> nodeBallsToDestroy = new List<Node>();
+        // hirizintal line
+        var horizontalLine = getLine(node, new Vector2(0, 1));
+        horizontalLine.AddRange(getLine(node, new Vector2(0, -1)));
+        result.horizontal = horizontalLine.Distinct().ToList();
+
+        // vertical line
+        var verticalLine = getLine(node, new Vector2(1, 0));
+        verticalLine.AddRange(getLine(node, new Vector2(-1, 0)));
+        result.vertical = verticalLine.Distinct().ToList();
+
+        // right diagonal
+        var rightDiag = getLine(node, new Vector2(1, 1));
+        rightDiag.AddRange(getLine(node, new Vector2(-1, -1)));
+        result.rightDiag = rightDiag.Distinct().ToList();
+
+        // right diagonal
+        var leftDiag = getLine(node, new Vector2(1, -1));
+        leftDiag.AddRange(getLine(node, new Vector2(-1, 1)));
+        result.leftDiag = leftDiag.Distinct().ToList();
+
+        return result;
+    }
+
+
+    private List<Node> getLine(Node node, Vector2 direction)
+    {
+        List<Node> line = new List<Node>();
+        var currentNode = node;
+        line.Add(currentNode);
+        int neighbourX = currentNode.x + (int)direction.x;
+        int neighbourY = currentNode.y + (int)direction.y;
+        var neighbourNode = IsInBounds(neighbourX, neighbourY)
+            ? tileNodes[neighbourX, neighbourY]
+            : null;
+
+        while (currentNode != null && neighbourNode != null &&
+            currentNode.ball != null && neighbourNode.ball != null && currentNode.ball.GetComponentInChildren<Ball>().Color == neighbourNode.ball.GetComponentInChildren<Ball>().Color)
+        {
+            line.Add(neighbourNode);
+            neighbourX += (int)direction.x;
+            neighbourY += (int)direction.y;
+
+            currentNode = neighbourNode;
+            neighbourNode = IsInBounds(neighbourX, neighbourY)
+            ? tileNodes[neighbourX, neighbourY]
+            : null;
+        }
+
+        return line;
     }
 
     private List<Node> getNodeLines(Node node, int minLineLength)

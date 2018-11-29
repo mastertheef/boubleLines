@@ -13,7 +13,7 @@ public class GameController : MonoBehaviour
 
     public PathFinder pathFinder;
     public SoundController soundController;
-    public int lineLength = 3;
+    public int lineLength = 5;
     public int startingBallCount = 3;
     public int ballsPerTurn = 2;
     public float ballSpeed = 5;
@@ -60,6 +60,13 @@ public class GameController : MonoBehaviour
             {
                 ballsGenerated++;
                 emptyCount--;
+
+                var lines = tileGraph.FindLines(tileGraph.tileNodes[(int)coords.x, (int)coords.y], lineLength);
+                if (lines.HaveLines(lineLength))
+                {
+                    tileGraph.DestroyBalls(lines, tileGraph.tileNodes[(int)coords.x, (int)coords.y], destroyEffectPrefab);
+                    soundController.PlayDestroy();
+                }
             }
         }
     }
@@ -105,12 +112,22 @@ public class GameController : MonoBehaviour
         }
     }
 
-    private void OnBallMoved()
+    private void OnBallMoved(Node target)
     {
+        var foundLines = tileGraph.FindLines(target, lineLength);
+        if (!foundLines.HaveLines(lineLength))
+        {
+            soundController.PlayMove();
+        }
+        else
+        {
+            tileGraph.DestroyBalls(foundLines, target, destroyEffectPrefab);
+            soundController.PlayDestroy();
+        }
+
         GenerateBalls(ballsPerTurn);
-        tileGraph.AnalizeAndDestroyBalls(lineLength, destroyEffectPrefab);
         tileGraph.InitNeighbours();
-        soundController.PlayMove();
+        
     }
    
     private bool addBall(Vector2 coords)
@@ -122,6 +139,7 @@ public class GameController : MonoBehaviour
             ball.transform.position = new Vector2(tileSize.x * coords.x - offset, tileSize.y * coords.y - offset);
             ball.GetComponentInChildren<Ball>().Color = possibleColors[Random.Range(0, possibleColors.Length)];
             tileGraph.AddBall((int)coords.x, (int)coords.y, ball);
+
             return true;
         }
 
