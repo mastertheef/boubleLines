@@ -9,10 +9,10 @@ public class GameController : MonoBehaviour
     public TileGraph tileGraph;
     public GameObject tileViewPrefab;
     public GameObject ballPrefab;
-    public GameObject destroyEffectPrefab;
 
     public PathFinder pathFinder;
     public SoundController soundController;
+    public ScoreController scoreController;
     public int lineLength = 5;
     public int startingBallCount = 3;
     public int ballsPerTurn = 2;
@@ -54,7 +54,6 @@ public class GameController : MonoBehaviour
 
         while (ballsGenerated < count && emptyCount != 0)
         {
-            
             var coords = new Vector2(Random.Range(0, width), Random.Range(0, height));
             if (addBall(coords))
             {
@@ -64,8 +63,9 @@ public class GameController : MonoBehaviour
                 var lines = tileGraph.FindLines(tileGraph.tileNodes[(int)coords.x, (int)coords.y], lineLength);
                 if (lines.HaveLines(lineLength))
                 {
-                    tileGraph.DestroyBalls(lines, tileGraph.tileNodes[(int)coords.x, (int)coords.y], destroyEffectPrefab);
+                    tileGraph.DestroyBalls(lines, tileGraph.tileNodes[(int)coords.x, (int)coords.y]);
                     soundController.PlayDestroy();
+                    scoreController.AddScore(lines, lineLength);
                 }
             }
         }
@@ -121,10 +121,10 @@ public class GameController : MonoBehaviour
         }
         else
         {
-            tileGraph.DestroyBalls(foundLines, target, destroyEffectPrefab);
+            tileGraph.DestroyBalls(foundLines, target);
             soundController.PlayDestroy();
         }
-
+        scoreController.AddScore(foundLines, lineLength);
         GenerateBalls(ballsPerTurn);
         tileGraph.InitNeighbours();
         
@@ -132,9 +132,10 @@ public class GameController : MonoBehaviour
    
     private bool addBall(Vector2 coords)
     {
+        var parent = GameObject.Find("Boubles");
         if (!tileGraph.nodesWithBalls.Any(x => x.x == coords.x && x.y == coords.y))
         {
-            var ball = Instantiate(ballPrefab, Vector3.zero, Quaternion.identity);
+            var ball = Instantiate(ballPrefab, Vector3.zero, Quaternion.identity, parent.transform);
             
             ball.transform.position = new Vector2(tileSize.x * coords.x - offset, tileSize.y * coords.y - offset);
             ball.GetComponentInChildren<Ball>().Color = possibleColors[Random.Range(0, possibleColors.Length)];

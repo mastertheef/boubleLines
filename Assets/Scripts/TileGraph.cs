@@ -11,6 +11,8 @@ public class TileGraph : MonoBehaviour {
     int width, height;
     public float ballAcceleration = 0.1f;
 
+    public GameObject destroyEffect;
+
 
     public int Width { get { return width; } }
     public int Height { get { return height; } }
@@ -112,7 +114,7 @@ public class TileGraph : MonoBehaviour {
         OnBallMoved(path.Last());
     }
 
-    public void DestroyBalls(FoundLines lines, Node startNode, GameObject destroyEffect)
+    public void DestroyBalls(FoundLines lines, Node startNode)
     {
         List<Node> nodeBallsToDestroy = new List<Node>();
         nodeBallsToDestroy.AddRange(lines.horizontal);
@@ -120,6 +122,11 @@ public class TileGraph : MonoBehaviour {
         nodeBallsToDestroy.AddRange(lines.leftDiag);
         nodeBallsToDestroy.AddRange(lines.rightDiag);
 
+        DestroyBalls(nodeBallsToDestroy, startNode);
+    }
+
+    public void DestroyBalls(List<Node> nodeBallsToDestroy, Node startNode)
+    {
         var distinctList = nodeBallsToDestroy.Distinct().ToList();
         if (distinctList.Any())
         {
@@ -132,7 +139,6 @@ public class TileGraph : MonoBehaviour {
                 var blowMain = blow.GetComponent<ParticleSystem>().main;
                 blowMain.startColor = color;
                 RemoveBall(ballNode);
-                
             }
         }
 
@@ -195,44 +201,7 @@ public class TileGraph : MonoBehaviour {
         return line;
     }
 
-    private List<Node> getNodeLines(Node node, int minLineLength)
-    {
-        List<Node> nodesToDestroy = new List<Node>();
-        foreach (var dir in directions)
-        {
-            List<Node> line = new List<Node>();
-            var currentNode = node;
-            line.Add(currentNode);
-            int neighbourX = currentNode.x + (int)dir.x;
-            int neighbourY = currentNode.y + (int)dir.y;
-            var neighbourNode = IsInBounds(neighbourX, neighbourY)
-                ? tileNodes[neighbourX, neighbourY]
-                : null;
-
-            while (currentNode != null && neighbourNode != null && 
-                currentNode.ball != null && neighbourNode.ball != null && currentNode.ball.GetComponentInChildren<Ball>().Color == neighbourNode.ball.GetComponentInChildren<Ball>().Color)
-            {
-                line.Add(neighbourNode);
-                neighbourX += (int)dir.x;
-                neighbourY += (int)dir.y;
-
-                currentNode = neighbourNode;
-                neighbourNode = IsInBounds(neighbourX, neighbourY)
-                ? tileNodes[neighbourX, neighbourY]
-                : null;
-            }
-
-            if (line.Count >= minLineLength)
-            {
-                nodesToDestroy.AddRange(line);
-            }
-        }
-
-        return nodesToDestroy.Distinct().ToList();
-    }
-
-
-    private bool IsInBounds(int x, int y)
+    public bool IsInBounds(int x, int y)
     {
         return (x >= 0 && x < width && y >= 0 && y < height);
     }
