@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Assets.Scripts.Models
 {
@@ -23,6 +24,16 @@ namespace Assets.Scripts.Models
                 vertical.Count >= minLength ||
                 leftDiag.Count >= minLength ||
                 rightDiag.Count >= minLength;
+        }
+
+        public List<Node> GetAll()
+        {
+            var all = new List<Node>();
+            all.AddRange(horizontal);
+            all.AddRange(vertical);
+            all.AddRange(leftDiag);
+            all.AddRange(rightDiag);
+            return all.Distinct().ToList();
         }
     }
 }

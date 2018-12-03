@@ -21,7 +21,7 @@ public class ScoreController : MonoBehaviour {
         ScoreText.text = string.Format("Score: {0}", score);
     }
 	
-	public void AddScore(FoundLines lines, int minLength)
+	public int AddScore(FoundLines lines, int minLength)
     {
         int addScore = 0;
         if (lines.HaveLines(minLength))
@@ -58,6 +58,14 @@ public class ScoreController : MonoBehaviour {
         }
 
         score += addScore;
+        ScoreText.text = string.Format("Score: {0}", score);
+
+        return addScore;
+    }
+
+    public void SubtractScore(int subtract)
+    {
+        score += subtract;
         ScoreText.text = string.Format("Score: {0}", score);
     }
 }

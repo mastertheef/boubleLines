@@ -1,11 +1,14 @@
-﻿using System.Collections;
+﻿using Assets.Scripts.Models;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class BonusController : MonoBehaviour {
 
-    private int coins = 0;
+    private TileGraph tileGraph;
+    private HistoryController historyController;
+    public int coins = 0;
     [SerializeField] private int explodePrice = 50;
     [SerializeField] private int sufflePrice = 100;
     [SerializeField] private int stepBackPrice = 50;
@@ -14,6 +17,7 @@ public class BonusController : MonoBehaviour {
     public bool isExploding = false;
     public Text coinsText;
     public Button explodeButton;
+    
 
     public int Coins {
         get
@@ -40,12 +44,13 @@ public class BonusController : MonoBehaviour {
         }
     }
 
-    private TileGraph tileGraph;
+
 
 	// Use this for initialization
 	void Start () {
         tileGraph = GameObject.Find("TileGraph").GetComponent<TileGraph>();
-        Coins = 0;
+        historyController = GameObject.Find("HistoryController").GetComponent<HistoryController>();
+        //Coins = 0;
         ExplodePrice = explodePrice;
     }
 	
@@ -95,4 +100,16 @@ public class BonusController : MonoBehaviour {
             isExploding = !isExploding;
         }
     }
+
+    public MoveState StepBack()
+    {
+        if (stepBackPrice <= coins && historyController.hasPrevious())
+        {
+            Coins -= stepBackPrice;
+            stepBackPrice *= 2;
+            return historyController.GetLastMove();
+            
+        }
+        return null;
+    } 
 }

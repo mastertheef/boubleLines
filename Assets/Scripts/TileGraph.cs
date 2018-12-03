@@ -8,16 +8,16 @@ public class TileGraph : MonoBehaviour {
 
     public Node[,] tileNodes;
     public List<Node> nodesWithBalls = new List<Node>();
+    public List<Node> emptyNodes = new List<Node>();
     int width, height;
     public float ballAcceleration = 0.1f;
 
     public GameObject destroyEffect;
 
-
     public int Width { get { return width; } }
     public int Height { get { return height; } }
 
-    public delegate void BallMovedHandler(Node target);
+    public delegate void BallMovedHandler(Node start, Node end);
     public event BallMovedHandler OnBallMoved;
 
     public static readonly Vector2[] directions =
@@ -46,6 +46,7 @@ public class TileGraph : MonoBehaviour {
                 var nodeType = (NodeType)tileMatrix[x, y];
                 var newNode = new Node(x, y, nodeType);
                 tileNodes[x, y] = newNode;
+                emptyNodes.Add(newNode);
             }
         }
     }
@@ -68,6 +69,7 @@ public class TileGraph : MonoBehaviour {
     {
         tileNodes[x, y].ball = ball;
         nodesWithBalls.Add(tileNodes[x, y]);
+        emptyNodes.Remove(tileNodes[x, y]);
     }
 
     public void RemoveBall(int x, int y)
@@ -75,6 +77,7 @@ public class TileGraph : MonoBehaviour {
         Destroy(tileNodes[x, y].ball.gameObject);
         tileNodes[x, y].ball = null;
         nodesWithBalls.Remove(tileNodes[x, y]);
+        emptyNodes.Add(tileNodes[x, y]);
     }
 
     public void RemoveBall(Node node)
@@ -91,10 +94,13 @@ public class TileGraph : MonoBehaviour {
             start.ball = null;
             nodesWithBalls.Remove(start);
             nodesWithBalls.Add(end);
+            emptyNodes.Remove(end);
+            emptyNodes.Add(start);
+
         }
     }
 
-    public IEnumerator MoveBall(List<Node> path, float speed)
+    public IEnumerator MoveBall(List<Node> path, float speed, bool triggerEvent = true)
     {
         var pathQueue = new Queue<Node>(path);
         var start = pathQueue.Dequeue();
@@ -111,7 +117,12 @@ public class TileGraph : MonoBehaviour {
         }
         
         MoveBall(path.First(), path.Last());
-        OnBallMoved(path.Last());
+        if (triggerEvent)
+        {
+            OnBallMoved(path.First(), path.Last());
+        }
+
+        InitNeighbours();
     }
 
     public void DestroyBalls(FoundLines lines, Node startNode)
@@ -204,6 +215,11 @@ public class TileGraph : MonoBehaviour {
     public bool IsInBounds(int x, int y)
     {
         return (x >= 0 && x < width && y >= 0 && y < height);
+    }
+
+    public Node GetRandomEmpty()
+    {
+        return emptyNodes[Random.Range(0, emptyNodes.Count)];
     }
 
     private List<Node> GetNeighbours(int x, int y)
