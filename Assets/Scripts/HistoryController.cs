@@ -13,7 +13,7 @@ public class HistoryController : MonoBehaviour {
 
     public Button stepBackButton;
 	
-	void Start () {
+	void Awake () {
         moves = new LinkedList<MoveState>();
         current = null;
         tileGraph = GameObject.Find("TileGraph").GetComponent<TileGraph>();
@@ -21,10 +21,11 @@ public class HistoryController : MonoBehaviour {
 
     }
 	
-    public MoveState AddMove(MoveState move)
+    public LinkedListNode<MoveState> AddMove(MoveState move)
     {
         if (!moves.Any() || current.Next == null)
         {
+            move.wasReversed = false;
             moves.AddLast(move);
             current = moves.Last;
         }
@@ -34,6 +35,7 @@ public class HistoryController : MonoBehaviour {
             current.Next.Value.End = move.End;
 
             current.Next.Value.DestroyedAfterMove = move.DestroyedAfterMove;
+            current.Next.Value.DestroyedAfterAppear = move.DestroyedAfterAppear;
 
             foreach (var ballState in current.Next.Value.Appeared)
             {
@@ -49,7 +51,7 @@ public class HistoryController : MonoBehaviour {
             current = current.Next;
         }
         stepBackButton.enabled = true;
-        return current.Value;
+        return current;
     }
 
     public bool hasPrevious()
@@ -58,10 +60,11 @@ public class HistoryController : MonoBehaviour {
     }
 
     
-    public MoveState GetLastMove()
+    public MoveState ReverseMove()
     {
         if (moves.Any() && current.Previous != null)
         {
+            current.Value.wasReversed = true;
             var result = current;
             current = hasPrevious() 
                 ? current.Previous
@@ -81,5 +84,10 @@ public class HistoryController : MonoBehaviour {
             return current.Value;
         }
         return null;
+    }
+
+    public LinkedListNode<MoveState> GetCurrent()
+    {
+        return current;
     }
 }

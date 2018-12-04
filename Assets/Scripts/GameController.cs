@@ -128,6 +128,7 @@ public class GameController : MonoBehaviour
         scoreController.SubtractScore(prevMove.ScoreAdded);
 
         //tileGraph.InitNeighbours();
+        pathFinder.Reset();
         Deselect();
     }
 
@@ -192,10 +193,23 @@ public class GameController : MonoBehaviour
         }
         int scoreAdded = scoreController.AddScore(foundLines, lineLength);
         move.ScoreAdded = scoreAdded;
-       
-        GenerateBalls(ballsPerTurn, move);
+        
+        
+        var currentMove = historyController.AddMove(move);
 
-        historyController.AddMove(move);
+        if (!currentMove.Value.wasReversed)
+        {
+            GenerateBalls(ballsPerTurn, move);
+        }
+        else
+        {
+            foreach (var moveBall in currentMove.Value.Appeared)
+            {
+                addBall(new Vector2(moveBall.x, moveBall.y), moveBall.Color);
+            }
+        }
+
+        
         tileGraph.InitNeighbours();
     }
    

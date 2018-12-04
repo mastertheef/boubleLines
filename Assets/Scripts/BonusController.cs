@@ -107,7 +107,7 @@ public class BonusController : MonoBehaviour {
         {
             Coins -= stepBackPrice;
             stepBackPrice *= 2;
-            return historyController.GetLastMove();
+            return historyController.ReverseMove();
             
         }
         return null;

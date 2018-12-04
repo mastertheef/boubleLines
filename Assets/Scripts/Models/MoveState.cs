@@ -28,6 +28,7 @@ namespace Assets.Scripts.Models
         public List<BallState> Appeared { get; set; }
         public List<BallState> DestroyedAfterAppear { get; set; }
         public int ScoreAdded { get; set; }
+        public bool wasReversed { get; set; }
 
         public MoveState()
         {
