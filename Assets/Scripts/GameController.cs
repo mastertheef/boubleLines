@@ -194,7 +194,6 @@ public class GameController : MonoBehaviour
         int scoreAdded = scoreController.AddScore(foundLines, lineLength);
         move.ScoreAdded = scoreAdded;
         
-        
         var currentMove = historyController.AddMove(move);
 
         if (!currentMove.Value.wasReversed)
@@ -230,6 +229,53 @@ public class GameController : MonoBehaviour
         }
 
         return false;
+    }
+
+    public void Shuffle()
+    {
+        if (!bonusController.Shuffle())
+        {
+            return;
+        }
+        var shuffleMove = new MoveState();
+        var newLocations = new List<Node>();
+        var shuffleLines = new List<Node>();
+        for (int i = 0; i < tileGraph.nodesWithBalls.Count; i++)
+        {
+            var node = tileGraph.nodesWithBalls[i];
+            Node newNode = null;
+            do
+            {
+                int newX = Random.Range(0, tileGraph.Width);
+                int newY = Random.Range(0, tileGraph.Height);
+                newNode = tileGraph.tileNodes[newX, newY];
+            }
+            while (newLocations.Any(x => x.x == newNode.x && x.y == newNode.y));
+
+            newLocations.Add(newNode);
+            StartCoroutine(tileGraph.ShuffleMove(node, newNode, ballSpeed));
+            shuffleMove.Appeared.Add(new BallState(newNode));
+
+            var foundLines = tileGraph.FindLines(node, lineLength);
+            if (foundLines.HaveLines(lineLength))
+            {
+                shuffleLines.AddRange(foundLines.GetAll());
+            }
+        }
+
+        
+        if (shuffleLines.Any())
+        {
+            var distinctLines = shuffleLines.Distinct().ToList();
+            distinctLines.ForEach(x => shuffleMove.Appeared.Remove(shuffleMove.Appeared.FirstOrDefault(y => y.x == x.x && y.y == x.y)));
+
+            tileGraph.DestroyBalls(distinctLines, distinctLines.First());
+            
+        }
+        historyController.Reset(shuffleMove);
+
+        tileGraph.InitNeighbours();
+        pathFinder.Reset();
     }
 
     private bool isSelected()

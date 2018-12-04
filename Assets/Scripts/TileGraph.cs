@@ -125,6 +125,17 @@ public class TileGraph : MonoBehaviour {
         InitNeighbours();
     }
 
+    public IEnumerator ShuffleMove(Node start, Node end, float speed)
+    {
+        while (start.ball.transform.position != end.tile.transform.position)
+        {
+            start.ball.transform.position = Vector2.MoveTowards(start.ball.transform.position, end.tile.transform.position, speed * Time.deltaTime);
+            speed += ballAcceleration;
+            yield return null;
+        }
+        MoveBall(start, end);
+    }
+
     public void DestroyBalls(FoundLines lines, Node startNode)
     {
         List<Node> nodeBallsToDestroy = new List<Node>();

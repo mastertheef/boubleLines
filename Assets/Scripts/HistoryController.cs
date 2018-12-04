@@ -86,6 +86,15 @@ public class HistoryController : MonoBehaviour {
         return null;
     }
 
+    public void Reset(MoveState move)
+    {
+        current = null;
+        moves.Clear();
+        moves.AddLast(move);
+        current = moves.Last;
+        stepBackButton.enabled = false;
+    }
+
     public LinkedListNode<MoveState> GetCurrent()
     {
         return current;

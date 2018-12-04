@@ -1,6 +1,7 @@
 ﻿using Assets.Scripts.Models;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,15 +9,18 @@ public class BonusController : MonoBehaviour {
 
     private TileGraph tileGraph;
     private HistoryController historyController;
+    private PathFinder pathFinder;
     public int coins = 0;
     [SerializeField] private int explodePrice = 50;
-    [SerializeField] private int sufflePrice = 100;
+    [SerializeField] private int shufflePrice = 100;
     [SerializeField] private int stepBackPrice = 50;
     
 
     public bool isExploding = false;
     public Text coinsText;
     public Button explodeButton;
+    public Button stepbackButton;
+    public Button shuffleButton;
     
 
     public int Coins {
@@ -50,6 +54,8 @@ public class BonusController : MonoBehaviour {
 	void Start () {
         tileGraph = GameObject.Find("TileGraph").GetComponent<TileGraph>();
         historyController = GameObject.Find("HistoryController").GetComponent<HistoryController>();
+        pathFinder = GameObject.Find("PathFinder").GetComponent<PathFinder>();
+
         //Coins = 0;
         ExplodePrice = explodePrice;
     }
@@ -86,6 +92,7 @@ public class BonusController : MonoBehaviour {
 
                     Coins -= explodePrice;
                     ExplodePrice *= 2;
+                    UpdateButtons();
                 }
             }
 
@@ -107,9 +114,29 @@ public class BonusController : MonoBehaviour {
         {
             Coins -= stepBackPrice;
             stepBackPrice *= 2;
+            UpdateButtons();
             return historyController.ReverseMove();
             
         }
         return null;
     } 
+
+    public bool Shuffle()
+    {
+        if (coins >= shufflePrice)
+        {
+            coins -= shufflePrice;
+            UpdateButtons();
+            return true;
+        }
+
+        return false;
+    }
+
+    private void UpdateButtons()
+    {
+        explodeButton.enabled = coins >= ExplodePrice;
+        shuffleButton.enabled = coins >= shufflePrice;
+        stepbackButton.enabled = coins >= stepBackPrice;
+    }
 }
