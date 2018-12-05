@@ -125,15 +125,16 @@ public class BonusController : MonoBehaviour {
     {
         if (coins >= shufflePrice)
         {
-            coins -= shufflePrice;
+            Coins -= shufflePrice;
             UpdateButtons();
+            shuffleButton.enabled = false;
             return true;
         }
 
         return false;
     }
 
-    private void UpdateButtons()
+    public void UpdateButtons()
     {
         explodeButton.enabled = coins >= ExplodePrice;
         shuffleButton.enabled = coins >= shufflePrice;

@@ -33,14 +33,14 @@ public class GameController : MonoBehaviour
     void Start()
     {
         currentMatrix = tileMatrix.MakeStartMap();
-        
+
         tileGraph.Init(currentMatrix);
         tileGraph.OnBallMoved += OnBallMoved;
 
         var graphView = tileGraph.gameObject.GetComponent<TileGraphView>();
         graphView.tileViewPrefab = tileViewPrefab;
         tileSize = tileViewPrefab.GetComponent<SpriteRenderer>().bounds.size;
-        
+
         graphView.Init(tileGraph, offset, tileSize);
 
         var move = new MoveState();
@@ -100,7 +100,7 @@ public class GameController : MonoBehaviour
         // reappear all destroyed after appeart
         if (prevMove.DestroyedAfterAppear.Any())
         {
-            foreach(var ballState in prevMove.DestroyedAfterAppear)
+            foreach (var ballState in prevMove.DestroyedAfterAppear)
             {
                 addBall(new Vector2(ballState.x, ballState.y), ballState.Color);
             }
@@ -193,7 +193,7 @@ public class GameController : MonoBehaviour
         }
         int scoreAdded = scoreController.AddScore(foundLines, lineLength);
         move.ScoreAdded = scoreAdded;
-        
+
         var currentMove = historyController.AddMove(move);
 
         if (!currentMove.Value.wasReversed)
@@ -208,17 +208,17 @@ public class GameController : MonoBehaviour
             }
         }
 
-        
+
         tileGraph.InitNeighbours();
     }
-   
+
     private bool addBall(Vector2 coords, Color? color = null)
     {
         var parent = GameObject.Find("Boubles");
         if (!tileGraph.nodesWithBalls.Any(x => x.x == coords.x && x.y == coords.y))
         {
             var ball = Instantiate(ballPrefab, Vector3.zero, Quaternion.identity, parent.transform);
-            
+
             ball.transform.position = new Vector2(tileSize.x * coords.x - offset, tileSize.y * coords.y - offset);
             ball.GetComponentInChildren<Ball>().Color = (color.HasValue)
                 ? color.Value
@@ -233,16 +233,29 @@ public class GameController : MonoBehaviour
 
     public void Shuffle()
     {
+        Deselect();
         if (!bonusController.Shuffle())
         {
             return;
         }
-        var shuffleMove = new MoveState();
+
         var newLocations = new List<Node>();
-        var shuffleLines = new List<Node>();
+        var syncMoveDict = new Dictionary<int, bool>();
+
         for (int i = 0; i < tileGraph.nodesWithBalls.Count; i++)
         {
-            var node = tileGraph.nodesWithBalls[i];
+            syncMoveDict.Add(i, false);
+        }
+
+        var balls = tileGraph.nodesWithBalls.Select(x => x.ball).ToList();
+        
+        tileGraph.emptyNodes.AddRange(tileGraph.nodesWithBalls);
+        tileGraph.nodesWithBalls.ForEach(x => x.ball = null);
+        tileGraph.nodesWithBalls.Clear();
+
+        for (int i = 0; i < balls.Count; i++)
+        {
+            var ball = balls[i];
             Node newNode = null;
             do
             {
@@ -251,31 +264,43 @@ public class GameController : MonoBehaviour
                 newNode = tileGraph.tileNodes[newX, newY];
             }
             while (newLocations.Any(x => x.x == newNode.x && x.y == newNode.y));
-
+            
             newLocations.Add(newNode);
-            StartCoroutine(tileGraph.ShuffleMove(node, newNode, ballSpeed));
-            shuffleMove.Appeared.Add(new BallState(newNode));
+            StartCoroutine(tileGraph.ShuffleMove(ball, newNode, ballSpeed, syncMoveDict, i));
+        }
 
-            var foundLines = tileGraph.FindLines(node, lineLength);
-            if (foundLines.HaveLines(lineLength))
+        StartCoroutine(AfterShuffle(syncMoveDict));
+    }
+
+    IEnumerator AfterShuffle(Dictionary<int, bool> sync)
+    {
+        while (sync.Values.Any(x => x == false))
+        {
+            yield return false;
+        }
+        var shuffleLines = new List<Node>();
+        foreach (var node in tileGraph.nodesWithBalls)
+        {
+            var lines = tileGraph.FindLines(node, lineLength);
+            if (lines.HaveLines(lineLength))
             {
-                shuffleLines.AddRange(foundLines.GetAll());
+                shuffleLines.AddRange(lines.GetAll());
             }
         }
 
-        
+        shuffleLines = shuffleLines.Distinct().ToList();
         if (shuffleLines.Any())
         {
-            var distinctLines = shuffleLines.Distinct().ToList();
-            distinctLines.ForEach(x => shuffleMove.Appeared.Remove(shuffleMove.Appeared.FirstOrDefault(y => y.x == x.x && y.y == x.y)));
-
-            tileGraph.DestroyBalls(distinctLines, distinctLines.First());
-            
+            tileGraph.DestroyBalls(shuffleLines, shuffleLines.First());
         }
+
+        var shuffleMove = new MoveState();
+        tileGraph.nodesWithBalls.ForEach(x => shuffleMove.Appeared.Add(new BallState(x)));
         historyController.Reset(shuffleMove);
 
         tileGraph.InitNeighbours();
         pathFinder.Reset();
+        bonusController.UpdateButtons();
     }
 
     private bool isSelected()
@@ -288,7 +313,7 @@ public class GameController : MonoBehaviour
         return tile.node.ball != null;
     }
 
-    private void  Select(TileView tile)
+    private void Select(TileView tile)
     {
         if (startNode != null)
         {
@@ -301,6 +326,11 @@ public class GameController : MonoBehaviour
 
     private void Deselect()
     {
+        if (startNode != null && startNode.ball != null)
+        {
+            startNode.ball.GetComponentInChildren<Ball>().Deselect();
+        }
+
         if (endNode != null && endNode.ball != null)
         {
             endNode.ball.GetComponentInChildren<Ball>().Deselect();

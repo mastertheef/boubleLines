@@ -57,12 +57,18 @@ public class TileGraph : MonoBehaviour {
         {
             for (int y = 0; y < height; y++)
             {
+                //tileNodes[x, y].tile.GetComponent<SpriteRenderer>().color = Color.white;
                 if (tileNodes[x, y].nodeType != NodeType.Closed)
                 {
                     tileNodes[x, y].neighbourNodes = GetNeighbours(x, y);
                 }
             }
         }
+
+        //foreach (var node in nodesWithBalls)
+        //{
+        //    node.tile.GetComponent<SpriteRenderer>().color = Color.red;
+        //}
     }
 
     public void AddBall(int x, int y, GameObject ball)
@@ -85,7 +91,7 @@ public class TileGraph : MonoBehaviour {
         RemoveBall(node.x, node.y);
     }
 
-    private void MoveBall(Node start, Node end)
+    public void MoveBall(Node start, Node end)
     {
         if (start.ball != null && end.ball == null)
         {
@@ -125,15 +131,19 @@ public class TileGraph : MonoBehaviour {
         InitNeighbours();
     }
 
-    public IEnumerator ShuffleMove(Node start, Node end, float speed)
+    public IEnumerator ShuffleMove(GameObject ball, Node end, float speed, Dictionary<int, bool> sync, int i)
     {
-        while (start.ball.transform.position != end.tile.transform.position)
+        end.ball = ball;
+        nodesWithBalls.Add(end);
+        emptyNodes.Remove(end);
+        while (ball.transform.position != end.tile.transform.position)
         {
-            start.ball.transform.position = Vector2.MoveTowards(start.ball.transform.position, end.tile.transform.position, speed * Time.deltaTime);
+            ball.transform.position = Vector2.MoveTowards(ball.transform.position, end.tile.transform.position, speed * Time.deltaTime);
             speed += ballAcceleration;
             yield return null;
         }
-        MoveBall(start, end);
+        
+        sync[i] = true;
     }
 
     public void DestroyBalls(FoundLines lines, Node startNode)
