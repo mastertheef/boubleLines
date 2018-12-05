@@ -9,6 +9,7 @@ public class BonusController : MonoBehaviour {
 
     private TileGraph tileGraph;
     private HistoryController historyController;
+    private SoundController soundController;
     private PathFinder pathFinder;
     public int coins = 0;
     [SerializeField] private int explodePrice = 50;
@@ -55,6 +56,7 @@ public class BonusController : MonoBehaviour {
         tileGraph = GameObject.Find("TileGraph").GetComponent<TileGraph>();
         historyController = GameObject.Find("HistoryController").GetComponent<HistoryController>();
         pathFinder = GameObject.Find("PathFinder").GetComponent<PathFinder>();
+        soundController = GameObject.Find("SoundController").GetComponent<SoundController>();
 
         //Coins = 0;
         ExplodePrice = explodePrice;
@@ -89,7 +91,7 @@ public class BonusController : MonoBehaviour {
                     }
 
                     tileGraph.DestroyBalls(ballsToDestroy, tile.node);
-
+                    soundController.PlayDestroy();
                     Coins -= explodePrice;
                     ExplodePrice *= 2;
                     UpdateButtons();

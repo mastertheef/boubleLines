@@ -163,10 +163,10 @@ public class TileGraph : MonoBehaviour {
         if (distinctList.Any())
         {
             StartCoroutine(Camera.main.GetComponent<RipplePostProcessor>().Ripple(startNode.tile.transform.position));
-
-            var color = distinctList[0].ball.GetComponentInChildren<Ball>().Color;
+            
             foreach (var ballNode in distinctList)
             {
+                var color = ballNode.ball.GetComponentInChildren<Ball>().Color;
                 var blow = Instantiate(destroyEffect, ballNode.tile.transform.position, Quaternion.identity);
                 var blowMain = blow.GetComponent<ParticleSystem>().main;
                 blowMain.startColor = color;
