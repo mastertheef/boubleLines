@@ -22,16 +22,17 @@ public class GameController : MonoBehaviour
     public float ballSpeed = 5;
 
     public Color[] possibleColors;
-
-    private Node startNode, endNode = null;
-
     public float offset = 4.5f;
-    Vector3 tileSize;
+
+    private Vector3 tileSize;
+    private Node startNode, endNode = null;
+    private bool gameOver = false;
 
     int[,] currentMatrix;
     // Use this for initialization
     void Start()
     {
+        gameOver = false;
         currentMatrix = tileMatrix.MakeStartMap();
 
         tileGraph.Init(currentMatrix);
@@ -135,7 +136,7 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (!gameOver && Input.GetMouseButtonDown(0))
         {
             var hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
 
@@ -208,7 +209,16 @@ public class GameController : MonoBehaviour
             }
         }
 
+        if (!tileGraph.emptyNodes.Any())
+        {
+            gameOver = true;
+            var highScore = FileController.GetHighScore();
 
+            if (scoreController.Score > highScore)
+            {
+                FileController.AddRecord(new ScoreRecord("Player", scoreController.Score));
+            }
+        }
         tileGraph.InitNeighbours();
     }
 

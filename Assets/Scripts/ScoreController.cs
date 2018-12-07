@@ -13,6 +13,7 @@ public class ScoreController : MonoBehaviour {
     public Text ScoreText;
     public Text CoinsText;
 
+    public int Score { get { return score; } }
 
 	// Use this for initialization
 	void Start () {
@@ -35,7 +36,7 @@ public class ScoreController : MonoBehaviour {
 
             if (lines.vertical.Count >= minLength)
             {
-                addScore += combo * lines.horizontal.Count;
+                addScore += combo * lines.vertical.Count;
                 combo++;
             }
 
@@ -57,15 +58,25 @@ public class ScoreController : MonoBehaviour {
             addScore = 1;
         }
 
-        score += addScore;
-        ScoreText.text = string.Format("Score: {0}", score);
+        StartCoroutine(UpdateScoreVisual(addScore));
 
         return addScore;
     }
 
+    public IEnumerator UpdateScoreVisual(int addScore)
+    {
+        int modifier = addScore < 0 ? -1 : 1;
+        for (int i = 0; i < Mathf.Abs(addScore); i++)
+        {
+            score += modifier;
+            ScoreText.text = string.Format("Score: {0}", score);
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+
+
     public void SubtractScore(int subtract)
     {
-        score += subtract;
-        ScoreText.text = string.Format("Score: {0}", score);
+        StartCoroutine(UpdateScoreVisual(subtract));
     }
 }
