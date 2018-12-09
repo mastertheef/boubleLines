@@ -26,13 +26,17 @@ namespace Assets.Scripts.Models
                 rightDiag.Count >= minLength;
         }
 
-        public List<Node> GetAll()
+        public List<Node> GetAll(int minLength)
         {
             var all = new List<Node>();
-            all.AddRange(horizontal);
-            all.AddRange(vertical);
-            all.AddRange(leftDiag);
-            all.AddRange(rightDiag);
+            if (horizontal.Count >= minLength)
+                all.AddRange(horizontal);
+            if (vertical.Count >= minLength)
+                all.AddRange(vertical);
+            if (leftDiag.Count >= minLength)
+                all.AddRange(leftDiag);
+            if (rightDiag.Count >= minLength)
+                all.AddRange(rightDiag);
             return all.Distinct().ToList();
         }
     }

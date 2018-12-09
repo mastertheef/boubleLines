@@ -27,12 +27,17 @@ public class GameController : MonoBehaviour
     private Vector3 tileSize;
     private Node startNode, endNode = null;
     private bool gameOver = false;
+    private Settings currentSettings;
 
     int[,] currentMatrix;
     // Use this for initialization
     void Start()
     {
         gameOver = false;
+
+        currentSettings = FileController.GetSettings();
+        soundController.SetBubbleVolume(currentSettings.BubbleVolume);
+
         currentMatrix = tileMatrix.MakeStartMap();
 
         tileGraph.Init(currentMatrix);
@@ -82,7 +87,7 @@ public class GameController : MonoBehaviour
                     int scoreAdded = scoreController.AddScore(lines, lineLength);
                     if (move != null)
                     {
-                        move.AddDestroyedAfterAppear(lines.GetAll());
+                        move.AddDestroyedAfterAppear(lines.GetAll(lineLength));
                         move.ScoreAdded += scoreAdded;
                     }
                 }
@@ -188,7 +193,7 @@ public class GameController : MonoBehaviour
         }
         else
         {
-            move.AddDestroyedAfterMove(foundLines.GetAll());
+            move.AddDestroyedAfterMove(foundLines.GetAll(lineLength));
             tileGraph.DestroyBalls(foundLines, end);
             soundController.PlayDestroy();
         }
@@ -294,7 +299,7 @@ public class GameController : MonoBehaviour
             var lines = tileGraph.FindLines(node, lineLength);
             if (lines.HaveLines(lineLength))
             {
-                shuffleLines.AddRange(lines.GetAll());
+                shuffleLines.AddRange(lines.GetAll(lineLength));
             }
         }
 

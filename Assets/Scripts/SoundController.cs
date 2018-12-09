@@ -6,20 +6,25 @@ public class SoundController : MonoBehaviour {
 
     [SerializeField] AudioClip bubbleMove;
     [SerializeField] AudioClip bubbleDestroy;
-    private AudioSource player;
+    private AudioSource bubblePlayer;
 
     // Use this for initialization
-    void Start () {
-        player = GetComponent<AudioSource>();
+    void Awake () {
+        bubblePlayer = GameObject.Find("BubbleAudioSource").GetComponent<AudioSource>();
 	}
 	
 	public void PlayMove()
     {
-        player.PlayOneShot(bubbleMove);
+        bubblePlayer.PlayOneShot(bubbleMove);
     }
 
     public void PlayDestroy()
     {
-        player.PlayOneShot(bubbleDestroy);
+        bubblePlayer.PlayOneShot(bubbleDestroy);
+    }
+
+    public void SetBubbleVolume(float volume)
+    {
+        bubblePlayer.volume = volume;
     }
 }

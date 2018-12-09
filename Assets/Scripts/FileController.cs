@@ -8,7 +8,7 @@ using System.Linq;
 public class FileController {
 
     private const string ScoreFile = "scoreFile.bl";
-    private const string SettingsFIle = "settings.bl";
+    private const string SettingsFile = "settings.bl";
     private const int MaxScoreRecords = 10;
 
 	public static int GetHighScore()
@@ -88,6 +88,47 @@ public class FileController {
                 }
             }
             formatter.Serialize(fileStream, list);
+            fileStream.Close();
+        }
+    }
+
+    public static Settings GetSettings()
+    {
+        string settingsFile = string.Format("{0}/{1}", Application.persistentDataPath, SettingsFile);
+
+        if (!File.Exists(settingsFile))
+        {
+            using (var fileStream = new FileStream(settingsFile, FileMode.Create, FileAccess.Write))
+            {
+                var formatter = new BinaryFormatter();
+                var defaultSettings = new Settings
+                {
+                    BubbleVolume = 1f,
+                    MusicVolume = 1f
+                };
+
+                formatter.Serialize(fileStream, defaultSettings);
+                fileStream.Close();
+                return defaultSettings;
+            }
+        }
+
+        using (var fileStream = new FileStream(settingsFile, FileMode.Open, FileAccess.Read))
+        {
+            var formatter = new BinaryFormatter();
+            var settings = formatter.Deserialize(fileStream) as Settings;
+            fileStream.Close();
+            return settings;
+        }
+    }
+
+    public static void SetSettings(Settings newSettings)
+    {
+        string settingsFile = string.Format("{0}/{1}", Application.persistentDataPath, SettingsFile);
+        using (var fileStream = new FileStream(settingsFile, FileMode.OpenOrCreate, FileAccess.Write))
+        {
+            var formatter = new BinaryFormatter();
+            formatter.Serialize(fileStream, newSettings);
             fileStream.Close();
         }
     }
