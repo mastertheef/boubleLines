@@ -185,22 +185,38 @@ public class TileGraph : MonoBehaviour {
         // hirizintal line
         var horizontalLine = getLine(node, new Vector2(0, 1));
         horizontalLine.AddRange(getLine(node, new Vector2(0, -1)));
-        result.horizontal = horizontalLine.Distinct().ToList();
+        horizontalLine = horizontalLine.Distinct().ToList();
+
+        result.horizontal = (horizontalLine.Count >= minLineLength)
+            ? horizontalLine
+            : new List<Node>();
 
         // vertical line
         var verticalLine = getLine(node, new Vector2(1, 0));
         verticalLine.AddRange(getLine(node, new Vector2(-1, 0)));
-        result.vertical = verticalLine.Distinct().ToList();
+        verticalLine = verticalLine.Distinct().ToList();
+
+        result.vertical = (verticalLine.Count >= minLineLength)
+            ? verticalLine
+            : new List<Node>();
 
         // right diagonal
         var rightDiag = getLine(node, new Vector2(1, 1));
         rightDiag.AddRange(getLine(node, new Vector2(-1, -1)));
-        result.rightDiag = rightDiag.Distinct().ToList();
+        rightDiag = rightDiag.Distinct().ToList();
+
+        result.rightDiag = (rightDiag.Count >= minLineLength)
+            ? rightDiag
+            : new List<Node>();
 
         // right diagonal
         var leftDiag = getLine(node, new Vector2(1, -1));
         leftDiag.AddRange(getLine(node, new Vector2(-1, 1)));
-        result.leftDiag = leftDiag.Distinct().ToList();
+        leftDiag = leftDiag.Distinct().ToList();
+
+        result.leftDiag = (leftDiag.Count >= minLineLength)
+            ? leftDiag
+            : new List<Node>();
 
         return result;
     }

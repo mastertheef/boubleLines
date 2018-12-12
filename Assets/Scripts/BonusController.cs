@@ -58,7 +58,7 @@ public class BonusController : MonoBehaviour {
         pathFinder = GameObject.Find("PathFinder").GetComponent<PathFinder>();
         soundController = GameObject.Find("SoundController").GetComponent<SoundController>();
 
-        //Coins = 0;
+        Coins = FileController.GetCoins();
         ExplodePrice = explodePrice;
     }
 	

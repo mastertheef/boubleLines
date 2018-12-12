@@ -9,6 +9,7 @@ public class FileController {
 
     private const string ScoreFile = "scoreFile.bl";
     private const string SettingsFile = "settings.bl";
+    private const string CoinsFile = "coins.bl";
     private const int MaxScoreRecords = 10;
 
 	public static int GetHighScore()
@@ -129,6 +130,36 @@ public class FileController {
         {
             var formatter = new BinaryFormatter();
             formatter.Serialize(fileStream, newSettings);
+            fileStream.Close();
+        }
+    }
+
+    public static int GetCoins()
+    {
+        string coinsFile = string.Format("{0}/{1}", Application.persistentDataPath, CoinsFile);
+
+        if (!File.Exists(coinsFile))
+        {
+            return 0;
+        }
+        using (var fileStream = new FileStream(coinsFile, FileMode.Open, FileAccess.Read))
+        {
+            var formatter = new BinaryFormatter();
+            var coins = (int)formatter.Deserialize(fileStream);
+
+            fileStream.Close();
+            return coins;
+        }
+    }
+
+    public static void SetCoins(int coins)
+    {
+        string coinsFile = string.Format("{0}/{1}", Application.persistentDataPath, CoinsFile);
+
+        using (var fileStream = new FileStream(coinsFile, FileMode.OpenOrCreate, FileAccess.Write))
+        {
+            var formatter = new BinaryFormatter();
+            formatter.Serialize(fileStream, coins);
             fileStream.Close();
         }
     }
