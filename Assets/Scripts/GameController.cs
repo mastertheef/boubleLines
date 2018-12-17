@@ -82,9 +82,9 @@ public class GameController : MonoBehaviour
 
                 if (lines.HaveLines(lineLength))
                 {
+                    int scoreAdded = scoreController.AddScore(lines, lineLength);
                     tileGraph.DestroyBalls(lines, tileGraph.tileNodes[(int)coords.x, (int)coords.y]);
                     soundController.PlayDestroy();
-                    int scoreAdded = scoreController.AddScore(lines, lineLength);
                     if (move != null)
                     {
                         move.AddDestroyedAfterAppear(lines.GetAll(lineLength));
@@ -187,6 +187,7 @@ public class GameController : MonoBehaviour
             End = end
         };
         var foundLines = tileGraph.FindLines(end, lineLength);
+        int scoreAdded = scoreController.AddScore(foundLines, lineLength);
         if (!foundLines.HaveLines(lineLength))
         {
             soundController.PlayMove();
@@ -197,7 +198,7 @@ public class GameController : MonoBehaviour
             tileGraph.DestroyBalls(foundLines, end);
             soundController.PlayDestroy();
         }
-        int scoreAdded = scoreController.AddScore(foundLines, lineLength);
+        
         move.ScoreAdded = scoreAdded;
 
         var currentMove = historyController.AddMove(move);

@@ -10,8 +10,10 @@ public class ScoreController : MonoBehaviour {
     private int combo;
 
     public int diagonalModifier = 2;
+    public int colorLineModifier = 3;
     public Text ScoreText;
     public Text CoinsText;
+    private BackColorController colorController;
 
     public int Score { get { return score; } }
 
@@ -20,36 +22,61 @@ public class ScoreController : MonoBehaviour {
         score = 0;
         combo = 1;
         ScoreText.text = string.Format("Score: {0}", score);
+        colorController = GameObject.Find("BackColorController").GetComponent<BackColorController>();
     }
 	
 	public int AddScore(FoundLines lines, int minLength)
     {
         int addScore = 0;
+        int colorBonus = 1;
+        bool colorBonusApplied = false;
         if (lines.HaveLines(minLength))
         {
 
             if (lines.horizontal.Count >= minLength)
             {
-                addScore += combo * lines.horizontal.Count;
+                colorBonus = lines.horizontal[0].ball.GetComponentInChildren<Ball>().Color == colorController.CurrentColor
+                    ? colorLineModifier
+                    : 1;
+                addScore += combo * colorBonus * lines.horizontal.Count;
+                colorBonusApplied = colorBonus > 1;
                 combo++;
             }
 
             if (lines.vertical.Count >= minLength)
             {
-                addScore += combo * lines.vertical.Count;
+                colorBonus = lines.vertical[0].ball.GetComponentInChildren<Ball>().Color == colorController.CurrentColor
+                    ? colorLineModifier
+                    : 1;
+                addScore += colorBonus * combo * lines.vertical.Count;
+                colorBonusApplied = colorBonus > 1;
                 combo++;
             }
 
             if (lines.leftDiag.Count >= minLength)
             {
-                addScore += diagonalModifier * combo * lines.leftDiag.Count;
+                colorBonus = lines.leftDiag[0].ball.GetComponentInChildren<Ball>().Color == colorController.CurrentColor
+                   ? colorLineModifier
+                   : 1;
+                addScore += colorBonus * diagonalModifier * combo * lines.leftDiag.Count;
+                colorBonusApplied = colorBonus > 1;
                 combo++;
             }
 
             if (lines.rightDiag.Count >= minLength)
             {
-                addScore += diagonalModifier * combo * lines.rightDiag.Count;
+                colorBonus = lines.rightDiag[0].ball.GetComponentInChildren<Ball>().Color == colorController.CurrentColor
+                  ? colorLineModifier
+                  : 1;
+                addScore += colorBonus * diagonalModifier * combo * lines.rightDiag.Count;
+                colorBonusApplied = colorBonus > 1;
                 combo++;
+            }
+            
+            if (colorBonusApplied)
+            {
+                // show nice message
+                colorController.ChangeColor();
             }
         }
         else
