@@ -88,6 +88,8 @@ GameObject:
   - component: {fileID: 224448624207755382}
   - component: {fileID: 222733658466295640}
   - component: {fileID: 114465159091077186}
+  - component: {fileID: 95167269113251934}
+  - component: {fileID: 114927676988173158}
   m_Layer: 5
   m_Name: SettingsPopup
   m_TagString: Untagged
@@ -343,6 +345,24 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!95 &95167269113251934
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1163963578191028}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 683830648266c6946856d844def221a7, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &114134160648013840
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -809,7 +829,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 114547539478616286}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 114927676988173158}
+        m_MethodName: SaveSettings
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &114880617030725422
@@ -847,6 +878,17 @@ MonoBehaviour:
   m_Text: 'Save
 
 '
+--- !u!114 &114927676988173158
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1163963578191028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83126c52a909e1645a2a38f2aa66db28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114937197001565890
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -885,7 +927,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 114162114985658686}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 114927676988173158}
+        m_MethodName: ClosePopup
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &114969892719734918
@@ -1165,7 +1218,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 1800}
   m_SizeDelta: {x: 982, y: 630}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224550967947763120

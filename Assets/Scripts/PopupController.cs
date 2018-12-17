@@ -1,20 +1,33 @@
-﻿using System.Collections;
+﻿using Assets.Scripts.Models;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum Popups
+{
+    Settings
+}
+
 public class PopupController : MonoBehaviour {
 
+    [SerializeField] private Canvas GUI;
+    [SerializeField] private SettingsPopup settingsPopupPrefab;
+
     [SerializeField] private Image popupDarken;
-    private Stack<Popup> popups;
+    private Stack<PopupBase> popups;
+    private Dictionary<Popups, PopupBase> popupPool;
 
     private void Awake()
     {
-        popups = new Stack<Popup>();
+        popups = new Stack<PopupBase>();
+        PopupBase.OnPopupClose += OnPopupClose;
+        popupPool = new Dictionary<Popups, PopupBase>();
     }
 
-    public void Show(Popup popup)
+    public void Show(PopupBase popup)
     {
         if (popups.Any())
         {
@@ -30,8 +43,10 @@ public class PopupController : MonoBehaviour {
     {
         if (popups.Any())
         {
-            popups.Pop().Hide();
-            var prev = popups.Peek();
+            var current = popups.Pop();
+            current.Hide();
+
+            var prev = popups.Any()? popups.Peek(): null;
             if (prev != null)
             {
                 prev.Show();
@@ -45,5 +60,27 @@ public class PopupController : MonoBehaviour {
         {
             popupDarken.enabled = false;
         }
+    }
+
+    public void OnPopupClose(PopupBase popup)
+    {
+        Close();
+    }
+
+    public void ShowSettings()
+    {
+        PopupBase popup;
+
+        if (popupPool.ContainsKey(Popups.Settings))
+        {
+            popup = popupPool[Popups.Settings];
+        }
+        else
+        {
+            popup = Instantiate(settingsPopupPrefab, GUI.transform);
+            popupPool.Add(Popups.Settings, popup);
+        }
+        Show(popup);
+
     }
 }
