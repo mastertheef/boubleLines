@@ -53,12 +53,12 @@ public class PopupController : MonoBehaviour {
             }
             else
             {
-                popupDarken.enabled = false;
+                StartCoroutine(HideDarken());
             }
         }
         else
         {
-            popupDarken.enabled = false;
+            StartCoroutine(HideDarken());
         }
     }
 
@@ -81,6 +81,11 @@ public class PopupController : MonoBehaviour {
             popupPool.Add(Popups.Settings, popup);
         }
         Show(popup);
+    }
 
+    private IEnumerator HideDarken()
+    {
+        yield return new WaitForSeconds(1);
+        popupDarken.enabled = false;
     }
 }
