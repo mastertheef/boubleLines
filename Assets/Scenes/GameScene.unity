@@ -5702,7 +5702,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: f86619d2739ad5549b8352b733fc76de, type: 2}
+  - {fileID: 2100000, guid: d806927e3cef7e44fae4e4acca9d662b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6566,6 +6566,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c325cf901b7fd0c4887db9b732e2f08d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  floatingTextPrefab: {fileID: 1880656369060374, guid: e1433007d03ea8744ba08ea7b662b96f,
+    type: 2}
+  GUI: {fileID: 1040970036}
   diagonalModifier: 2
   colorLineModifier: 3
   ScoreText: {fileID: 584783484}
