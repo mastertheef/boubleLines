@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class ScoreController : MonoBehaviour {
 
+    [SerializeField] private GameObject floatingTextPrefab;
+    [SerializeField] private Canvas GUI;
     private int score;
     private int combo;
 
@@ -14,6 +16,7 @@ public class ScoreController : MonoBehaviour {
     public Text ScoreText;
     public Text CoinsText;
     private BackColorController colorController;
+    
 
     public int Score { get { return score; } }
 
@@ -41,6 +44,7 @@ public class ScoreController : MonoBehaviour {
                 addScore += combo * colorBonus * lines.horizontal.Count;
                 colorBonusApplied = colorBonus > 1;
                 combo++;
+                ShowFloatingScore(lines.horizontal, addScore / lines.horizontal.Count);
             }
 
             if (lines.vertical.Count >= minLength)
@@ -51,6 +55,7 @@ public class ScoreController : MonoBehaviour {
                 addScore += colorBonus * combo * lines.vertical.Count;
                 colorBonusApplied = colorBonus > 1;
                 combo++;
+                ShowFloatingScore(lines.vertical, addScore / lines.vertical.Count);
             }
 
             if (lines.leftDiag.Count >= minLength)
@@ -61,6 +66,7 @@ public class ScoreController : MonoBehaviour {
                 addScore += colorBonus * diagonalModifier * combo * lines.leftDiag.Count;
                 colorBonusApplied = colorBonus > 1;
                 combo++;
+                ShowFloatingScore(lines.leftDiag, addScore / lines.leftDiag.Count);
             }
 
             if (lines.rightDiag.Count >= minLength)
@@ -71,6 +77,7 @@ public class ScoreController : MonoBehaviour {
                 addScore += colorBonus * diagonalModifier * combo * lines.rightDiag.Count;
                 colorBonusApplied = colorBonus > 1;
                 combo++;
+                ShowFloatingScore(lines.rightDiag, addScore / lines.rightDiag.Count);
             }
             
             if (colorBonusApplied)
@@ -101,9 +108,21 @@ public class ScoreController : MonoBehaviour {
         }
     }
 
-
     public void SubtractScore(int subtract)
     {
         StartCoroutine(UpdateScoreVisual(subtract));
+    }
+
+    private void ShowFloatingScore(List<Node> line, int number)
+    {
+        foreach (var node in line)
+        {
+            var position = Camera.main.WorldToScreenPoint(node.tile.transform.position);
+            var foatingText = Instantiate(floatingTextPrefab);
+            foatingText.transform.SetParent(GUI.transform);
+            foatingText.transform.position = position;
+            foatingText.GetComponentInChildren<Text>().text = string.Format("+{0}", number);
+            Destroy(foatingText, 1f);
+        }
     }
 }
