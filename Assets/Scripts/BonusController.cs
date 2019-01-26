@@ -32,7 +32,7 @@ public class BonusController : MonoBehaviour {
         set
         {
             coins = value;
-            coinsText.text = string.Format("x {0}", coins);
+            coinsText.text = string.Format("{0}", coins);
         }
     }
 

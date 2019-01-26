@@ -231,11 +231,12 @@ public class GameController : MonoBehaviour
     private bool addBall(Vector2 coords, Color? color = null)
     {
         var parent = GameObject.Find("Boubles");
+        var spacing = tileViewPrefab.GetComponent<TileView>().spacing;
         if (!tileGraph.nodesWithBalls.Any(x => x.x == coords.x && x.y == coords.y))
         {
             var ball = Instantiate(ballPrefab, Vector3.zero, Quaternion.identity, parent.transform);
 
-            ball.transform.position = new Vector2(tileSize.x * coords.x - offset, tileSize.y * coords.y - offset);
+            ball.transform.position = new Vector2((tileSize.x + spacing) * coords.x - offset, (tileSize.y + spacing) * coords.y - offset);
             ball.GetComponentInChildren<Ball>().Color = (color.HasValue)
                 ? color.Value
                 : possibleColors[Random.Range(0, possibleColors.Length)];

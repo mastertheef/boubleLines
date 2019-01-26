@@ -24,7 +24,7 @@ public class ScoreController : MonoBehaviour {
 	void Start () {
         score = 0;
         combo = 1;
-        ScoreText.text = string.Format("Score: {0}", score);
+        ScoreText.text = string.Format("{0}", score);
         colorController = GameObject.Find("BackColorController").GetComponent<BackColorController>();
     }
 	
@@ -103,7 +103,7 @@ public class ScoreController : MonoBehaviour {
         for (int i = 0; i < Mathf.Abs(addScore); i++)
         {
             score += modifier;
-            ScoreText.text = string.Format("Score: {0}", score);
+            ScoreText.text = string.Format("{0}", score);
             yield return new WaitForSeconds(0.1f);
         }
     }
