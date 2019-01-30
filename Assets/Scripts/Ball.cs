@@ -19,7 +19,7 @@ public class Ball : MonoBehaviour {
 
     public void Deselect()
     {
-        anim.SetBool("isJumping", false);
+        GetComponentInParent<Animator>().SetBool("isJumping", false); // fix for step back after explode
     }
 
     public Color Color {

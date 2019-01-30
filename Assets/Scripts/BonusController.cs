@@ -32,7 +32,7 @@ public class BonusController : MonoBehaviour {
         set
         {
             coins = value;
-            coinsText.text = string.Format("{0}", coins);
+            coinsText.text = coins.ToString();
         }
     }
 
@@ -45,14 +45,39 @@ public class BonusController : MonoBehaviour {
         set
         {
             explodePrice = value;
-            explodeButton.GetComponentInChildren<Text>().text = string.Format("Explode: {0}", explodePrice);
+            explodeButton.GetComponentInChildren<Text>().text = explodePrice.ToString();
+        }
+    }
+
+    public int ShufflePrice
+    {
+        get
+        {
+            return explodePrice;
+        }
+        set
+        {
+            shufflePrice = value;
+            shuffleButton.GetComponentInChildren<Text>().text = shufflePrice.ToString();
+        }
+    }
+
+    public int StepBackPrice
+    {
+        get
+        {
+            return stepBackPrice;
+        }
+        set
+        {
+            stepBackPrice = value;
+            stepbackButton.GetComponentInChildren<Text>().text = stepBackPrice.ToString();
         }
     }
 
 
-
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         tileGraph = GameObject.Find("TileGraph").GetComponent<TileGraph>();
         historyController = GameObject.Find("HistoryController").GetComponent<HistoryController>();
         pathFinder = GameObject.Find("PathFinder").GetComponent<PathFinder>();
@@ -60,6 +85,8 @@ public class BonusController : MonoBehaviour {
 
         Coins = FileController.GetCoins();
         ExplodePrice = explodePrice;
+        ShufflePrice = shufflePrice;
+        StepBackPrice = stepBackPrice;
     }
 	
 	// Update is called once per frame
@@ -92,9 +119,13 @@ public class BonusController : MonoBehaviour {
 
                     tileGraph.DestroyBalls(ballsToDestroy, tile.node);
                     soundController.PlayDestroy();
-                    Coins -= explodePrice;
+                    Coins -= ExplodePrice;
                     ExplodePrice *= 2;
                     UpdateButtons();
+
+                    var shuffleMove = new MoveState();
+                    tileGraph.nodesWithBalls.ForEach(x => shuffleMove.Appeared.Add(new BallState(x)));
+                    historyController.Reset(shuffleMove);
                 }
             }
 
@@ -104,7 +135,7 @@ public class BonusController : MonoBehaviour {
 
     public void Explode()
     {
-        if (coins >= explodePrice)
+        if (coins >= ExplodePrice)
         {
             isExploding = !isExploding;
         }
@@ -112,22 +143,21 @@ public class BonusController : MonoBehaviour {
 
     public MoveState StepBack()
     {
-        if (stepBackPrice <= coins && historyController.hasPrevious())
+        if (StepBackPrice <= coins && historyController.hasPrevious())
         {
-            Coins -= stepBackPrice;
-            stepBackPrice *= 2;
+            Coins -= StepBackPrice;
+            StepBackPrice *= 2;
             UpdateButtons();
             return historyController.ReverseMove();
-            
         }
         return null;
     } 
 
     public bool Shuffle()
     {
-        if (coins >= shufflePrice)
+        if (coins >= ShufflePrice)
         {
-            Coins -= shufflePrice;
+            Coins -= ShufflePrice;
             UpdateButtons();
             shuffleButton.enabled = false;
             return true;
@@ -139,7 +169,7 @@ public class BonusController : MonoBehaviour {
     public void UpdateButtons()
     {
         explodeButton.enabled = coins >= ExplodePrice;
-        shuffleButton.enabled = coins >= shufflePrice;
-        stepbackButton.enabled = coins >= stepBackPrice;
+        shuffleButton.enabled = coins >= ShufflePrice;
+        stepbackButton.enabled = coins >= StepBackPrice;
     }
 }

@@ -136,6 +136,8 @@ public class FileController {
 
     public static int GetCoins()
     {
+        return 9999;
+
         string coinsFile = string.Format("{0}/{1}", Application.persistentDataPath, CoinsFile);
 
         if (!File.Exists(coinsFile))
