@@ -835,7 +835,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 1154, y: 119}
+  m_AnchoredPosition: {x: 1136, y: 301}
   m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0, y: 0}
 --- !u!1 &671807258
@@ -922,6 +922,7 @@ MonoBehaviour:
   explodeButton: {fileID: 1923840319}
   stepbackButton: {fileID: 622813780}
   shuffleButton: {fileID: 2114799954}
+  pinPrefab: {fileID: 1141471195546126, guid: 7b9d0edd4d6ab314695eba4c3704b49b, type: 2}
 --- !u!4 &763631442
 Transform:
   m_ObjectHideFlags: 0
@@ -6810,7 +6811,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c843ead8650cbe4db80c3a0acef4a60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stepBackButton: {fileID: 0}
+  stepBackButton: {fileID: 622813780}
 --- !u!1 &1903387583
 GameObject:
   m_ObjectHideFlags: 0
@@ -6890,7 +6891,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 623, y: 119}
+  m_AnchoredPosition: {x: 605, y: 301}
   m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1923840319
@@ -7388,7 +7389,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 891, y: 119}
+  m_AnchoredPosition: {x: 873, y: 301}
   m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &2114799954

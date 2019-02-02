@@ -22,7 +22,10 @@ public class BonusController : MonoBehaviour {
     public Button explodeButton;
     public Button stepbackButton;
     public Button shuffleButton;
-    
+    public GameObject pinPrefab;
+    private List<Pin> shownPins;
+    bool pinsShown = false;
+
 
     public int Coins {
         get
@@ -87,15 +90,29 @@ public class BonusController : MonoBehaviour {
         ExplodePrice = explodePrice;
         ShufflePrice = shufflePrice;
         StepBackPrice = stepBackPrice;
+
+        shownPins = new List<Pin>();
     }
 	
 	// Update is called once per frame
 	void Update () {
+        // show pins on balls
+        if (isExploding && !pinsShown)
+        {
+            foreach (var node in tileGraph.nodesWithBalls)
+            {
+                var pin = Instantiate(pinPrefab, node.tile.transform.position, Quaternion.identity);
+                shownPins.Add(pin.GetComponent<Pin>());
+            }
+            pinsShown = true;
+        }
+       
+
         if (isExploding && Input.GetMouseButtonDown(0))
         {
             var hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
 
-            if (hit.transform.tag == "Tile")
+            if (hit.transform != null && hit.transform.CompareTag("Tile"))
             {
                 var tile = hit.transform.gameObject.GetComponent<TileView>();
                 
@@ -127,9 +144,9 @@ public class BonusController : MonoBehaviour {
                     tileGraph.nodesWithBalls.ForEach(x => shuffleMove.Appeared.Add(new BallState(x)));
                     historyController.Reset(shuffleMove);
                 }
+                isExploding = false;
+                clearPins(true);
             }
-
-            isExploding = false;
         }
 	}
 
@@ -137,6 +154,10 @@ public class BonusController : MonoBehaviour {
     {
         if (coins >= ExplodePrice)
         {
+            if (isExploding && pinsShown)
+            {
+                clearPins(false);
+            }
             isExploding = !isExploding;
         }
     }
@@ -171,5 +192,19 @@ public class BonusController : MonoBehaviour {
         explodeButton.enabled = coins >= ExplodePrice;
         shuffleButton.enabled = coins >= ShufflePrice;
         stepbackButton.enabled = coins >= StepBackPrice;
+    }
+
+    private void clearPins(bool force)
+    {
+        if (!force)
+        {
+            shownPins.ForEach(x => x.Hide());
+        }
+        else
+        {
+            shownPins.ForEach(x => Destroy(x.gameObject));
+        }
+        shownPins.Clear();
+        pinsShown = false;
     }
 }
