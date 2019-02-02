@@ -104,8 +104,8 @@ public class FileController {
                 var formatter = new BinaryFormatter();
                 var defaultSettings = new Settings
                 {
-                    BubbleVolume = 1f,
-                    MusicVolume = 1f
+                    SoundOn = true,
+                    MusicOn = true
                 };
 
                 formatter.Serialize(fileStream, defaultSettings);

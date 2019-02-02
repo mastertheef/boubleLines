@@ -10,20 +10,20 @@ public class SettingsPopup : PopupBase {
 
 	public void SaveSettings()
     {
-        var settings = new Settings
-        {
-            BubbleVolume = soundSlider.value,
-            MusicVolume = musicSlider.value
-        };
-        FileController.SetSettings(settings);
+        //var settings = new Settings
+        //{
+        //    BubbleVolume = soundSlider.value,
+        //    MusicVolume = musicSlider.value
+        //};
+        //FileController.SetSettings(settings);
         ClosePopup();
     }
 
     public override void Show()
     {
-        var settings = FileController.GetSettings();
-        musicSlider.value = settings.MusicVolume;
-        soundSlider.value = settings.BubbleVolume;
+        //var settings = FileController.GetSettings();
+        //musicSlider.value = settings.MusicVolume;
+        //soundSlider.value = settings.BubbleVolume;
         base.Show();
     }
 }

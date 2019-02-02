@@ -8,13 +8,15 @@ using UnityEngine.UI;
 
 public enum Popups
 {
-    Settings
+    Settings,
+    Pause
 }
 
 public class PopupController : MonoBehaviour {
 
     [SerializeField] private Canvas GUI;
     [SerializeField] private SettingsPopup settingsPopupPrefab;
+    [SerializeField] private PausePopup pausePopupPrefab;
 
     [SerializeField] private Image popupDarken;
     private Stack<PopupBase> popups;
@@ -25,6 +27,12 @@ public class PopupController : MonoBehaviour {
         popups = new Stack<PopupBase>();
         PopupBase.OnPopupClose += OnPopupClose;
         popupPool = new Dictionary<Popups, PopupBase>();
+    }
+
+    private void Start()
+    {
+        popupPool.Add(Popups.Settings, Instantiate(settingsPopupPrefab, GUI.transform));
+        popupPool.Add(Popups.Pause, Instantiate(pausePopupPrefab, GUI.transform));
     }
 
     public void Show(PopupBase popup)
@@ -70,16 +78,14 @@ public class PopupController : MonoBehaviour {
     public void ShowSettings()
     {
         PopupBase popup;
+        popup = popupPool[Popups.Settings];
+        Show(popup);
+    }
 
-        if (popupPool.ContainsKey(Popups.Settings))
-        {
-            popup = popupPool[Popups.Settings];
-        }
-        else
-        {
-            popup = Instantiate(settingsPopupPrefab, GUI.transform);
-            popupPool.Add(Popups.Settings, popup);
-        }
+    public void ShowPause()
+    {
+        PopupBase popup;
+        popup = popupPool[Popups.Pause];
         Show(popup);
     }
 

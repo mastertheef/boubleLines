@@ -36,7 +36,7 @@ public class GameController : MonoBehaviour
         gameOver = false;
 
         currentSettings = FileController.GetSettings();
-        soundController.SetBubbleVolume(currentSettings.BubbleVolume);
+        soundController.SetBubbleVolume(currentSettings.SoundOn ? 1: 0);
 
         currentMatrix = tileMatrix.MakeStartMap();
 
