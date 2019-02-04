@@ -113,6 +113,12 @@ public class ScoreController : MonoBehaviour {
         StartCoroutine(UpdateScoreVisual(subtract));
     }
 
+    public void ResetScore()
+    {
+        score = 0;
+        ScoreText.text = string.Format("{0}", score);
+    }
+
     private void ShowFloatingScore(List<Node> line, int number)
     {
         foreach (var node in line)

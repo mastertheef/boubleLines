@@ -12,6 +12,7 @@ public class PausePopup : PopupBase {
 
     Settings currentSettings;
     SoundController soundController;
+    GameController gameController;
 
     private void Awake()
     {
@@ -25,6 +26,7 @@ public class PausePopup : PopupBase {
         base.Start();
        
         soundController = GameObject.Find("SoundController").GetComponent<SoundController>();
+        gameController = GameObject.Find("GameController").GetComponent<GameController>();
     }
 	
     private void UpdateToggle(Toggle toggle, bool value)
@@ -49,5 +51,11 @@ public class PausePopup : PopupBase {
         currentSettings.MusicOn = MusicToggle.isOn;
         FileController.SetSettings(currentSettings);
         soundController.SetBubbleVolume(MusicToggle.isOn ? 1 : 0);
+    }
+
+    public void Restart()
+    {
+        gameController.RestartGame();
+        ClosePopup();
     }
 }

@@ -207,4 +207,10 @@ public class BonusController : MonoBehaviour {
         shownPins.Clear();
         pinsShown = false;
     }
+
+    public void ResetPrices()
+    {
+        ExplodePrice = 50;
+        StepBackPrice = 50;
+    }
 }

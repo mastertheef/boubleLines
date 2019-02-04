@@ -33,11 +33,6 @@ public class GameController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        gameOver = false;
-
-        currentSettings = FileController.GetSettings();
-        soundController.SetBubbleVolume(currentSettings.SoundOn ? 1: 0);
-
         currentMatrix = tileMatrix.MakeStartMap();
 
         tileGraph.Init(currentMatrix);
@@ -48,14 +43,33 @@ public class GameController : MonoBehaviour
         tileSize = tileViewPrefab.GetComponent<SpriteRenderer>().bounds.size;
 
         graphView.Init(tileGraph, offset, tileSize);
+        RestartGame();
+    }
+
+    public void RestartGame()
+    {
+        gameOver = false;
+
+        if (tileGraph.nodesWithBalls != null && tileGraph.nodesWithBalls.Any())
+        {
+            tileGraph.DestroyBalls(tileGraph.nodesWithBalls, tileGraph.nodesWithBalls.First());
+        }
+
+        currentSettings = FileController.GetSettings();
+        soundController.SetBubbleVolume(currentSettings.SoundOn ? 1 : 0);
 
         var move = new MoveState();
 
         GenerateBalls(startingBallCount, move);
-        historyController.AddMove(move);
+        historyController.Reset(move);
+        // historyController.AddMove(move);
         tileGraph.InitNeighbours();
 
         pathFinder.Init(tileGraph);
+
+        scoreController.ResetScore();
+        bonusController.ResetPrices();
+        
     }
 
     private void GenerateBalls(int count, MoveState move)
@@ -84,6 +98,7 @@ public class GameController : MonoBehaviour
                 {
                     int scoreAdded = scoreController.AddScore(lines, lineLength);
                     tileGraph.DestroyBalls(lines, tileGraph.tileNodes[(int)coords.x, (int)coords.y]);
+                    tileGraph.InitNeighbours();
                     soundController.PlayDestroy();
                     if (move != null)
                     {
