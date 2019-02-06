@@ -25,14 +25,17 @@ public class PopupController : MonoBehaviour {
     private void Awake()
     {
         popups = new Stack<PopupBase>();
-        PopupBase.OnPopupClose += OnPopupClose;
         popupPool = new Dictionary<Popups, PopupBase>();
     }
 
     private void Start()
     {
-        popupPool.Add(Popups.Settings, Instantiate(settingsPopupPrefab, GUI.transform));
-        popupPool.Add(Popups.Pause, Instantiate(pausePopupPrefab, GUI.transform));
+        PopupBase.OnPopupClose += OnPopupClose;
+        if (settingsPopupPrefab != null)
+            popupPool.Add(Popups.Settings, Instantiate(settingsPopupPrefab, GUI.transform));
+
+        if (pausePopupPrefab != null) 
+            popupPool.Add(Popups.Pause, Instantiate(pausePopupPrefab, GUI.transform));
     }
 
     public void Show(PopupBase popup)
@@ -93,5 +96,10 @@ public class PopupController : MonoBehaviour {
     {
         yield return new WaitForSeconds(1);
         popupDarken.enabled = false;
+    }
+
+    private void OnDestroy()
+    {
+        PopupBase.OnPopupClose -= OnPopupClose;
     }
 }

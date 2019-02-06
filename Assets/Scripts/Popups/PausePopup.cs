@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class PausePopup : PopupBase {
@@ -57,5 +58,10 @@ public class PausePopup : PopupBase {
     {
         gameController.RestartGame();
         ClosePopup();
+    }
+
+    public void Home()
+    {
+        SceneManager.LoadScene("HomeScene");
     }
 }

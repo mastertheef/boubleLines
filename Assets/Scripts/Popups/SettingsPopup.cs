@@ -1,29 +1,46 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class SettingsPopup : PopupBase {
 
-    [SerializeField] private Slider musicSlider;
-    [SerializeField] private Slider soundSlider;
+    [SerializeField] private Toggle MusicToggle;
+    [SerializeField] private Toggle SoundToggle;
 
-	public void SaveSettings()
+    Settings currentSettings;
+
+    private void Awake()
     {
-        //var settings = new Settings
-        //{
-        //    BubbleVolume = soundSlider.value,
-        //    MusicVolume = musicSlider.value
-        //};
-        //FileController.SetSettings(settings);
-        ClosePopup();
+        currentSettings = FileController.GetSettings();
+        UpdateToggle(SoundToggle, currentSettings.SoundOn);
+        UpdateToggle(MusicToggle, currentSettings.MusicOn);
     }
 
     public override void Show()
     {
-        //var settings = FileController.GetSettings();
-        //musicSlider.value = settings.MusicVolume;
-        //soundSlider.value = settings.BubbleVolume;
+        var settings = FileController.GetSettings();
         base.Show();
+    }
+
+    private void UpdateToggle(Toggle toggle, bool value)
+    {
+        var offImage = toggle.transform.Find("Background").Find("OffImage").GetComponent<Image>();
+        if (offImage != null)
+        {
+            offImage.enabled = !value;
+        }
+    }
+
+    public void SoundToggleValueChanged()
+    {
+        UpdateToggle(SoundToggle, SoundToggle.isOn);
+        currentSettings.SoundOn = SoundToggle.isOn;
+        FileController.SetSettings(currentSettings);
+    }
+
+    public void MusicToggleValueChanged()
+    {
+        UpdateToggle(MusicToggle, MusicToggle.isOn);
+        currentSettings.MusicOn = MusicToggle.isOn;
+        FileController.SetSettings(currentSettings);
     }
 }
