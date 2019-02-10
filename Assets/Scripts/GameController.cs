@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using Assets.Scripts.Models;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class GameController : MonoBehaviour
     public ScoreController scoreController;
     public BonusController bonusController;
     public HistoryController historyController;
+    public Canvas GameOverGUI;
     public int lineLength = 5;
     public int startingBallCount = 3;
     public int ballsPerTurn = 2;
@@ -48,6 +50,7 @@ public class GameController : MonoBehaviour
 
     public void RestartGame()
     {
+        GameOverGUI.enabled = false;
         gameOver = false;
 
         if (tileGraph.nodesWithBalls != null && tileGraph.nodesWithBalls.Any())
@@ -302,6 +305,11 @@ public class GameController : MonoBehaviour
         }
 
         StartCoroutine(AfterShuffle(syncMoveDict));
+    }
+
+    public void Home()
+    {
+        SceneManager.LoadScene("HomeScreen");
     }
 
     IEnumerator AfterShuffle(Dictionary<int, bool> sync)
