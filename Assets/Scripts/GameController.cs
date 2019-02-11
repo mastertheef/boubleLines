@@ -17,6 +17,7 @@ public class GameController : MonoBehaviour
     public ScoreController scoreController;
     public BonusController bonusController;
     public HistoryController historyController;
+    public GameOverController gameOverController;
     public Canvas GameOverGUI;
     public int lineLength = 5;
     public int startingBallCount = 3;
@@ -72,7 +73,7 @@ public class GameController : MonoBehaviour
 
         scoreController.ResetScore();
         bonusController.ResetPrices();
-        
+        bonusController.Coins = FileController.GetCoins();
     }
 
     private void GenerateBalls(int count, MoveState move)
@@ -244,6 +245,11 @@ public class GameController : MonoBehaviour
             }
         }
         tileGraph.InitNeighbours();
+
+        if (!tileGraph.emptyNodes.Any())
+        {
+            gameOverController.GameOver();
+        }
     }
 
     private bool addBall(Vector2 coords, Color? color = null)
@@ -309,7 +315,7 @@ public class GameController : MonoBehaviour
 
     public void Home()
     {
-        SceneManager.LoadScene("HomeScreen");
+        SceneManager.LoadScene("HomeScene");
     }
 
     IEnumerator AfterShuffle(Dictionary<int, bool> sync)

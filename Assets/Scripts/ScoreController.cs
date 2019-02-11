@@ -14,7 +14,7 @@ public class ScoreController : MonoBehaviour {
     public int diagonalModifier = 2;
     public int colorLineModifier = 3;
     public Text ScoreText;
-    public Text CoinsText;
+    public Text HighScoreText;
     private BackColorController colorController;
     
 
@@ -25,6 +25,7 @@ public class ScoreController : MonoBehaviour {
         score = 0;
         combo = 1;
         ScoreText.text = string.Format("{0}", score);
+        HighScoreText.text = FileController.GetHighScore().ToString();
         colorController = GameObject.Find("BackColorController").GetComponent<BackColorController>();
     }
 	

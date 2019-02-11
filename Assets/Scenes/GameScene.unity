@@ -1840,6 +1840,7 @@ Transform:
   - {fileID: 1798501120}
   - {fileID: 1700717585}
   - {fileID: 1032671115}
+  - {fileID: 1086923875}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2076,6 +2077,51 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!1 &1086923874
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1086923875}
+  - component: {fileID: 1086923876}
+  m_Layer: 0
+  m_Name: GameOverController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1086923875
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1086923874}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 791462423}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1086923876
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1086923874}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a5614457b37d6446b840fd49ea68540, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GameOverGUI: {fileID: 1707207612}
+  TotalCoinsText: {fileID: 1134385524}
+  ScoreText: {fileID: 1690111800}
+  HighScoreText: {fileID: 1544491830}
+  RewardText: {fileID: 547131471}
 --- !u!1 &1134385522
 GameObject:
   m_ObjectHideFlags: 0
@@ -7812,7 +7858,8 @@ MonoBehaviour:
   scoreController: {fileID: 2090439220}
   bonusController: {fileID: 763631441}
   historyController: {fileID: 1798501121}
-  GameOverGUI: {fileID: 0}
+  gameOverController: {fileID: 1086923876}
+  GameOverGUI: {fileID: 1707207612}
   lineLength: 5
   startingBallCount: 3
   ballsPerTurn: 2
@@ -8963,6 +9010,7 @@ MonoBehaviour:
   colorLineModifier: 3
   ScoreText: {fileID: 584783484}
   CoinsText: {fileID: 1241992850}
+  HighScoreText: {fileID: 162254369}
 --- !u!4 &2090439221
 Transform:
   m_ObjectHideFlags: 0
