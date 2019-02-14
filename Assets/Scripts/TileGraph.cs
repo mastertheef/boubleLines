@@ -177,6 +177,15 @@ public class TileGraph : MonoBehaviour {
         InitNeighbours();
     }
 
+    public void DestroySIngleBall(Node ballNode)
+    {
+        var color = ballNode.ball.GetComponentInChildren<Ball>().Color;
+        var blow = Instantiate(destroyEffect, ballNode.tile.transform.position, Quaternion.identity);
+        var blowMain = blow.GetComponent<ParticleSystem>().main;
+        blowMain.startColor = color;
+        RemoveBall(ballNode);
+    }
+
     public FoundLines FindLines(Node node, int minLineLength)
     {
         var result = new FoundLines();

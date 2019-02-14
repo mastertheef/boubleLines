@@ -124,12 +124,23 @@ public class ScoreController : MonoBehaviour {
     {
         foreach (var node in line)
         {
-            var position = Camera.main.WorldToScreenPoint(node.tile.transform.position);
-            var foatingText = Instantiate(floatingTextPrefab);
-            foatingText.transform.SetParent(GUI.transform);
-            foatingText.transform.position = position;
-            foatingText.GetComponentInChildren<Text>().text = string.Format("+{0}", number);
-            Destroy(foatingText, 1f);
+            AddFinalBonusScore(node, number);
+        }
+    }
+
+    public void AddFinalBonusScore(Node node, int number, bool addScore = false)
+    {
+        var position = Camera.main.WorldToScreenPoint(node.tile.transform.position);
+        var foatingText = Instantiate(floatingTextPrefab);
+        foatingText.transform.SetParent(GUI.transform);
+        foatingText.transform.position = position;
+        foatingText.GetComponentInChildren<Text>().text = string.Format("+{0}", number);
+        Destroy(foatingText, 1f);
+
+        if (addScore)
+        {
+            score += number;
+            ScoreText.text = score.ToString();
         }
     }
 }
