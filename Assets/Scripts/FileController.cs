@@ -10,7 +10,7 @@ public class FileController {
     private const string ScoreFile = "scoreFile.bl";
     private const string SettingsFile = "settings.bl";
     private const string CoinsFile = "coins.bl";
-    private const int MaxScoreRecords = 10;
+    private const int MaxScoreRecords = 7;
 
 	public static int GetHighScore()
     {
@@ -61,7 +61,7 @@ public class FileController {
             var result = formatter.Deserialize(fileStream) as List<ScoreRecord>;
             
             fileStream.Close();
-            return result;
+            return result.OrderByDescending(x=>x.HighScore).ToList();
         }
     }
 

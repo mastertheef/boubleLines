@@ -9009,7 +9009,6 @@ MonoBehaviour:
   diagonalModifier: 2
   colorLineModifier: 3
   ScoreText: {fileID: 584783484}
-  CoinsText: {fileID: 1241992850}
   HighScoreText: {fileID: 162254369}
 --- !u!4 &2090439221
 Transform:

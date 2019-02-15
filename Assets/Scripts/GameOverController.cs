@@ -33,12 +33,12 @@ public class GameOverController : MonoBehaviour {
     private IEnumerator ColorMatchBonus()
     {
         var currentColor = backColorController.CurrentColor;
-        var colorMatchNodes = gameController.tileGraph.nodesWithBalls.Where(x => x.ball.GetComponent<Ball>().Color == currentColor).ToList();
+        var colorMatchNodes = gameController.tileGraph.nodesWithBalls.Where(x => x.ball.GetComponentInChildren<Ball>().Color == currentColor).ToList();
 
-        foreach(var node in colorMatchNodes)
+        for(int i = colorMatchNodes.Count - 1; i>=0; i--)
         {
-            gameController.tileGraph.DestroySIngleBall(node);
-            scoreController.AddFinalBonusScore(node, 4);
+            gameController.tileGraph.DestroySIngleBall(colorMatchNodes[i]);
+            scoreController.AddFinalBonusScore(colorMatchNodes[i], 7, true);
             yield return new WaitForSeconds(0.2f);
         }
 

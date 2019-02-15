@@ -17,4 +17,11 @@ public class HomeController : MonoBehaviour {
     {
         SceneManager.LoadScene("GameScene");
     }
+
+    public void RateUs()
+    {
+#if unity_android
+        Application.OpenURL("market://details?id=com.QualityGeek.BubbleLines");
+#endif
+    }
 }
