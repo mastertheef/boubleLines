@@ -9,6 +9,8 @@ public class RecordElement : MonoBehaviour {
 	public void SetValues(string name, int score)
     {
         PlayerNameText.text = name;
-        ScoreText.text = score.ToString();
+        ScoreText.text = score > 0
+            ? score.ToString()
+            : string.Empty;
     }
 }

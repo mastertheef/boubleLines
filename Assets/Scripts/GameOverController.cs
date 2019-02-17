@@ -15,6 +15,7 @@ public class GameOverController : MonoBehaviour {
     private ScoreController scoreController;
     private BackColorController backColorController;
     private GameController gameController;
+    private SoundController soundController;
     private int reward;
 
     // Use this for initialization
@@ -23,6 +24,7 @@ public class GameOverController : MonoBehaviour {
         scoreController = GameObject.Find("ScoreController").GetComponent<ScoreController>();
         backColorController = GameObject.Find("BackColorController").GetComponent<BackColorController>();
         gameController = GameObject.Find("GameController").GetComponent<GameController>();
+        soundController = GameObject.Find("SoundController").GetComponent<SoundController>();
 	}
 	
     public void GameOver()
@@ -38,6 +40,7 @@ public class GameOverController : MonoBehaviour {
         for(int i = colorMatchNodes.Count - 1; i>=0; i--)
         {
             gameController.tileGraph.DestroySIngleBall(colorMatchNodes[i]);
+            soundController.PlayDestroy();
             scoreController.AddFinalBonusScore(colorMatchNodes[i], 7, true);
             yield return new WaitForSeconds(0.2f);
         }

@@ -26,10 +26,17 @@ public class HighScoreController : MonoBehaviour {
             Destroy(RecordsPanel.GetChild(i).gameObject);
         }
 
-        foreach (var record in records)
+        for (int i = 0; i < FileController.MaxScoreRecords; i++)
         {
             var line = Instantiate(ElementPrefab, RecordsPanel);
-            line.SetValues(record.PlayerName, record.HighScore);
+            if (i < records.Count)
+            {
+                line.SetValues(records[i].PlayerName, records[i].HighScore);
+            }
+            else
+            {
+                line.SetValues(string.Empty, 0);
+            }
         }
     }
 

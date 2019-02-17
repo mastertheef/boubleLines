@@ -10,7 +10,9 @@ public class FileController {
     private const string ScoreFile = "scoreFile.bl";
     private const string SettingsFile = "settings.bl";
     private const string CoinsFile = "coins.bl";
-    private const int MaxScoreRecords = 7;
+    private const int maxScoreRecords = 7;
+
+    public static int MaxScoreRecords { get { return maxScoreRecords; } }
 
 	public static int GetHighScore()
     {
@@ -71,7 +73,7 @@ public class FileController {
         var formatter = new BinaryFormatter();
 
         bool fileEmpty = !File.Exists(highScoreFile) || File.ReadAllBytes(highScoreFile).Length == 0;
-        using (var fileStream = new FileStream(highScoreFile, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+        using (var fileStream = new FileStream(highScoreFile, FileMode.OpenOrCreate))
         {
             List<ScoreRecord> list = new List<ScoreRecord>();
 
@@ -83,9 +85,9 @@ public class FileController {
             {
                 list = formatter.Deserialize(fileStream) as List<ScoreRecord>;
                 list.Insert(0, record);
-                if (list.Count > MaxScoreRecords)
+                if (list.Count > maxScoreRecords)
                 {
-                    list.RemoveAt(MaxScoreRecords);
+                    list.RemoveAt(maxScoreRecords);
                 }
             }
             formatter.Serialize(fileStream, list);

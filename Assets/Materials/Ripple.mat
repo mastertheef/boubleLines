@@ -5,7 +5,8 @@ Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: Ripple
   m_Shader: {fileID: 4800000, guid: 901ac16a0baa3ff47993b594fe60e814, type: 3}
   m_ShaderKeywords: 
@@ -57,8 +58,8 @@ Material:
     m_Floats:
     - _Amount: 0
     - _BumpScale: 1
-    - _CenterX: -2.8
-    - _CenterY: 0.9228033
+    - _CenterX: 0.9228033
+    - _CenterY: -1.8692992
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
