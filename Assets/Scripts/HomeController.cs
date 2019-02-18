@@ -15,7 +15,8 @@ public class HomeController : MonoBehaviour {
 	
 	public void StartGame()
     {
-        SceneManager.LoadScene("GameScene");
+        //SceneManager.LoadScene("GameScene");
+        GameObject.Find("SceneFader").GetComponent<SceneFader>().FaedTo("GameScene");
     }
 
     public void RateUs()

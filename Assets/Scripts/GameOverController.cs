@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,6 +6,7 @@ using UnityEngine.UI;
 public class GameOverController : MonoBehaviour {
 
     [SerializeField] private Canvas GameOverGUI;
+    [SerializeField] private Image BackGround;
     [SerializeField] private Text TotalCoinsText;
     [SerializeField] private Text ScoreText;
     [SerializeField] private Text HighScoreText;
@@ -16,6 +16,7 @@ public class GameOverController : MonoBehaviour {
     private BackColorController backColorController;
     private GameController gameController;
     private SoundController soundController;
+    private PopupController popupController;
     private int reward;
 
     // Use this for initialization
@@ -25,19 +26,26 @@ public class GameOverController : MonoBehaviour {
         backColorController = GameObject.Find("BackColorController").GetComponent<BackColorController>();
         gameController = GameObject.Find("GameController").GetComponent<GameController>();
         soundController = GameObject.Find("SoundController").GetComponent<SoundController>();
-	}
+        popupController = GameObject.Find("PopupController").GetComponent<PopupController>();
+    }
 	
     public void GameOver()
+    {
+        popupController.Show(Popups.GameOver);
+    }
+
+    public void StartGameOverRoutine()
     {
         StartCoroutine(ColorMatchBonus());
     }
 
     private IEnumerator ColorMatchBonus()
     {
+        yield return new WaitForSeconds(1.5f);
         var currentColor = backColorController.CurrentColor;
         var colorMatchNodes = gameController.tileGraph.nodesWithBalls.Where(x => x.ball.GetComponentInChildren<Ball>().Color == currentColor).ToList();
 
-        for(int i = colorMatchNodes.Count - 1; i>=0; i--)
+        for (int i = colorMatchNodes.Count - 1; i>=0; i--)
         {
             gameController.tileGraph.DestroySIngleBall(colorMatchNodes[i]);
             soundController.PlayDestroy();
@@ -45,11 +53,15 @@ public class GameOverController : MonoBehaviour {
             yield return new WaitForSeconds(0.2f);
         }
 
+        yield return new WaitForSeconds(1f);
+
         ShowGameOverGUI();
     }
 
     private void ShowGameOverGUI()
     {
+        BackGround.GetComponent<CanvasRenderer>().SetAlpha(0f);
+        BackGround.CrossFadeAlpha(1f, 0.2f, false);
         int score = scoreController.Score;
         int highScore = FileController.GetHighScore();
         int coins = FileController.GetCoins();

@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Linq;
 using Assets.Scripts.Models;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 public class GameController : MonoBehaviour
 {
@@ -32,7 +33,17 @@ public class GameController : MonoBehaviour
     private bool gameOver = false;
     private Settings currentSettings;
 
+    private int fingerID = -1;
+
     int[,] currentMatrix;
+
+    private void Awake()
+    {
+#if !UNITY_EDITOR
+     fingerID = 0; 
+#endif
+    }
+
     // Use this for initialization
     void Start()
     {
@@ -160,6 +171,11 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (EventSystem.current.IsPointerOverGameObject(fingerID))    // is the touch on the GUI
+        {
+            return;
+        }
+
         if (!gameOver && Input.GetMouseButtonDown(0))
         {
             var hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);

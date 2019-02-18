@@ -62,6 +62,7 @@ public class PausePopup : PopupBase {
 
     public void Home()
     {
-        SceneManager.LoadScene("HomeScene");
+        GameObject.Find("SceneFader").GetComponent<SceneFader>().FaedTo("HomeScene");
+        //SceneManager.LoadScene("HomeScene");
     }
 }

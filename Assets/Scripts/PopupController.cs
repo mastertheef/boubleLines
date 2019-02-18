@@ -9,7 +9,8 @@ using UnityEngine.UI;
 public enum Popups
 {
     Settings,
-    Pause
+    Pause,
+    GameOver
 }
 
 public class PopupController : MonoBehaviour {
@@ -17,6 +18,7 @@ public class PopupController : MonoBehaviour {
     [SerializeField] private Canvas GUI;
     [SerializeField] private SettingsPopup settingsPopupPrefab;
     [SerializeField] private PausePopup pausePopupPrefab;
+    [SerializeField] private GameOverPopup gameOverPopup;
 
     [SerializeField] private Image popupDarken;
     private Stack<PopupBase> popups;
@@ -36,6 +38,9 @@ public class PopupController : MonoBehaviour {
 
         if (pausePopupPrefab != null) 
             popupPool.Add(Popups.Pause, Instantiate(pausePopupPrefab, GUI.transform));
+
+        if (gameOverPopup != null)
+            popupPool.Add(Popups.GameOver, Instantiate(gameOverPopup, GUI.transform));
     }
 
     public void Show(PopupBase popup)
@@ -48,6 +53,8 @@ public class PopupController : MonoBehaviour {
         popup.Show();
         popups.Push(popup);
         popupDarken.enabled = true;
+        popupDarken.GetComponent<CanvasRenderer>().SetAlpha(0f);
+        popupDarken.CrossFadeAlpha(1f, 0.1f, false);
     }
 
     public void Close()
@@ -92,10 +99,27 @@ public class PopupController : MonoBehaviour {
         Show(popup);
     }
 
+    public void ShowGameOver()
+    {
+        PopupBase popup;
+        popup = popupPool[Popups.GameOver];
+        Show(popup);
+    }
+
+    public void Show(Popups popupType)
+    {
+        PopupBase popup;
+        popup = popupPool[popupType];
+        Show(popup);
+    }
+
     private IEnumerator HideDarken()
     {
+        popupDarken.GetComponent<CanvasRenderer>().SetAlpha(1f);
+        popupDarken.CrossFadeAlpha(0f, 0.1f, false);
         yield return new WaitForSeconds(1);
         popupDarken.enabled = false;
+       
     }
 
     private void OnDestroy()
