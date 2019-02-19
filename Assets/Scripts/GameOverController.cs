@@ -11,6 +11,7 @@ public class GameOverController : MonoBehaviour {
     [SerializeField] private Text ScoreText;
     [SerializeField] private Text HighScoreText;
     [SerializeField] private Text RewardText;
+    [SerializeField] private Button DoubleRewardButton;
 
     private ScoreController scoreController;
     private BackColorController backColorController;
@@ -65,11 +66,11 @@ public class GameOverController : MonoBehaviour {
         int score = scoreController.Score;
         int highScore = FileController.GetHighScore();
         int coins = FileController.GetCoins();
-        reward = score / 10;
+        reward = score / 10 + 1;
         TotalCoinsText.text = coins.ToString();
         ScoreText.text = score.ToString();
-        HighScoreText.text = highScore.ToString();
-        RewardText.text = reward.ToString();
+        HighScoreText.text = string.Format("Record: {0}", highScore);
+        RewardText.text = string.Format("Reward: {0}", reward);
         GameOverGUI.enabled = true;
 
         if (score > highScore)
@@ -78,5 +79,15 @@ public class GameOverController : MonoBehaviour {
         }
 
         FileController.SetCoins(coins + reward);
+    }
+
+    public void DoubleReward()
+    {
+        int score = scoreController.Score;
+        reward *= 2;
+        RewardText.text = string.Format("Reward: {0}", reward); // maybe some animation ...
+        int coins = FileController.GetCoins();
+        FileController.SetCoins(coins + reward);
+        DoubleRewardButton.enabled = false;
     }
 }
