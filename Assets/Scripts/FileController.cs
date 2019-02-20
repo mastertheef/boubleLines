@@ -95,6 +95,7 @@ public class FileController {
                     list.RemoveAt(maxScoreRecords);
                 }
             }
+            fileStream.Seek(0, SeekOrigin.Begin);
             formatter.Serialize(fileStream, list);
             fileStream.Close();
         }

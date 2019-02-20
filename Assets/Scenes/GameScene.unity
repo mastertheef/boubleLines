@@ -8360,7 +8360,7 @@ MonoBehaviour:
   gameOverController: {fileID: 1086923876}
   GameOverGUI: {fileID: 1707207612}
   lineLength: 5
-  startingBallCount: 48
+  startingBallCount: 3
   ballsPerTurn: 2
   ballSpeed: 1
   possibleColors:

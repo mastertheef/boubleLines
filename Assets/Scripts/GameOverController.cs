@@ -46,7 +46,7 @@ public class GameOverController : MonoBehaviour {
         var currentColor = backColorController.CurrentColor;
         var colorMatchNodes = gameController.tileGraph.nodesWithBalls.Where(x => x.ball.GetComponentInChildren<Ball>().Color == currentColor).ToList();
 
-        for (int i = colorMatchNodes.Count - 1; i>=0; i--)
+        for (int i = colorMatchNodes.Count - 1; i >= 0; i--)
         {
             gameController.tileGraph.DestroySIngleBall(colorMatchNodes[i]);
             soundController.PlayDestroy();
@@ -72,11 +72,9 @@ public class GameOverController : MonoBehaviour {
         HighScoreText.text = string.Format("Record: {0}", highScore);
         RewardText.text = string.Format("Reward: {0}", reward);
         GameOverGUI.enabled = true;
-        score = 35896;
 
         if (score > highScore)
         {
-            // FileController.AddRecord(new ScoreRecord("Player", score)); // need popup for that
             popupController.Show(Popups.NewRecord);
         }
 
