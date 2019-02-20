@@ -72,10 +72,12 @@ public class GameOverController : MonoBehaviour {
         HighScoreText.text = string.Format("Record: {0}", highScore);
         RewardText.text = string.Format("Reward: {0}", reward);
         GameOverGUI.enabled = true;
+        score = 35896;
 
         if (score > highScore)
         {
-            FileController.AddRecord(new ScoreRecord("Player", score)); // need popup for that
+            // FileController.AddRecord(new ScoreRecord("Player", score)); // need popup for that
+            popupController.Show(Popups.NewRecord);
         }
 
         FileController.SetCoins(coins + reward);

@@ -10,7 +10,8 @@ public enum Popups
 {
     Settings,
     Pause,
-    GameOver
+    GameOver,
+    NewRecord
 }
 
 public class PopupController : MonoBehaviour {
@@ -19,6 +20,7 @@ public class PopupController : MonoBehaviour {
     [SerializeField] private SettingsPopup settingsPopupPrefab;
     [SerializeField] private PausePopup pausePopupPrefab;
     [SerializeField] private GameOverPopup gameOverPopup;
+    [SerializeField] private NewRecordPopup newRecordPopup;
 
     [SerializeField] private Image popupDarken;
     private Stack<PopupBase> popups;
@@ -41,6 +43,9 @@ public class PopupController : MonoBehaviour {
 
         if (gameOverPopup != null)
             popupPool.Add(Popups.GameOver, Instantiate(gameOverPopup, GUI.transform));
+
+        if (gameOverPopup != null)
+            popupPool.Add(Popups.NewRecord, Instantiate(newRecordPopup, GUI.transform));
     }
 
     public void Show(PopupBase popup)

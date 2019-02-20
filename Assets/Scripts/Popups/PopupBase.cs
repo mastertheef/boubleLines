@@ -8,7 +8,7 @@ public class PopupBase : MonoBehaviour {
     private Animator anim;
     public delegate void PopupCloseHandler(PopupBase popup);
     public static event PopupCloseHandler OnPopupClose;
-    public void Start()
+    public virtual void Start()
     {
         anim = GetComponent<Animator>();
     }

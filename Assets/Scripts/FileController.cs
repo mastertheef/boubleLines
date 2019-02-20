@@ -67,6 +67,11 @@ public class FileController {
         }
     }
 
+    public static void AddRecord(string playerName, int score)
+    {
+        AddRecord(new ScoreRecord(playerName, score));
+    }
+
     public static void AddRecord(ScoreRecord record)
     {
         string highScoreFile = string.Format("{0}/{1}", Application.persistentDataPath, ScoreFile);
