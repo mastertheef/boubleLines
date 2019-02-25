@@ -2243,6 +2243,8 @@ MonoBehaviour:
     type: 3}
   newRecordPopup: {fileID: 9169505353046062420, guid: a590d3b152dbf944e83700d9340c0538,
     type: 3}
+  shopPopup: {fileID: 8307539678486569741, guid: f69ade4def413aa44ad571c416c8103d,
+    type: 3}
   popupDarken: {fileID: 739832086}
 --- !u!1 &1040970033
 GameObject:
@@ -7190,7 +7192,7 @@ PrefabInstance:
     - target: {fileID: 5418432471649092523, guid: 9ed4408f8efbf4745994d0d94c253657,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4024471370571509521, guid: 9ed4408f8efbf4745994d0d94c253657,
         type: 3}

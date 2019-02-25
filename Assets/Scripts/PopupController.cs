@@ -11,7 +11,8 @@ public enum Popups
     Settings,
     Pause,
     GameOver,
-    NewRecord
+    NewRecord,
+    Shop
 }
 
 public class PopupController : MonoBehaviour {
@@ -21,6 +22,7 @@ public class PopupController : MonoBehaviour {
     [SerializeField] private PausePopup pausePopupPrefab;
     [SerializeField] private GameOverPopup gameOverPopup;
     [SerializeField] private NewRecordPopup newRecordPopup;
+    [SerializeField] private ShopPopup shopPopup;
 
     [SerializeField] private Image popupDarken;
     private Stack<PopupBase> popups;
@@ -46,6 +48,9 @@ public class PopupController : MonoBehaviour {
 
         if (gameOverPopup != null)
             popupPool.Add(Popups.NewRecord, Instantiate(newRecordPopup, GUI.transform));
+
+        if (shopPopup != null)
+            popupPool.Add(Popups.Shop, Instantiate(shopPopup, GUI.transform));
     }
 
     public void Show(PopupBase popup)
@@ -109,6 +114,11 @@ public class PopupController : MonoBehaviour {
         PopupBase popup;
         popup = popupPool[Popups.GameOver];
         Show(popup);
+    }
+
+    public void ShowShop()
+    {
+        Show(Popups.Shop);
     }
 
     public void Show(Popups popupType)

@@ -23,7 +23,7 @@ public class ScoreController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         score = 0;
-        combo = 1;
+        combo = 0;
         ScoreText.text = string.Format("{0}", score);
         HighScoreText.text = FileController.GetHighScore().ToString();
         colorController = GameObject.Find("BackColorController").GetComponent<BackColorController>();
@@ -36,50 +36,52 @@ public class ScoreController : MonoBehaviour {
         bool colorBonusApplied = false;
         if (lines.HaveLines(minLength))
         {
-
+            
             if (lines.horizontal.Count >= minLength)
             {
+                combo++;
                 colorBonus = lines.horizontal[0].ball.GetComponentInChildren<Ball>().Color == colorController.CurrentColor
                     ? colorLineModifier
                     : 1;
-                addScore += combo * colorBonus * lines.horizontal.Count;
+                addScore += comboModifier(combo) * colorBonus * lines.horizontal.Count;
                 colorBonusApplied = colorBonus > 1;
-                combo++;
                 ShowFloatingScore(lines.horizontal, addScore / lines.horizontal.Count);
             }
 
             if (lines.vertical.Count >= minLength)
             {
+                combo++;
                 colorBonus = lines.vertical[0].ball.GetComponentInChildren<Ball>().Color == colorController.CurrentColor
                     ? colorLineModifier
                     : 1;
-                addScore += colorBonus * combo * lines.vertical.Count;
+                addScore += colorBonus * comboModifier(combo) * lines.vertical.Count;
                 colorBonusApplied = colorBonus > 1;
-                combo++;
                 ShowFloatingScore(lines.vertical, addScore / lines.vertical.Count);
             }
 
             if (lines.leftDiag.Count >= minLength)
             {
+                combo++;
                 colorBonus = lines.leftDiag[0].ball.GetComponentInChildren<Ball>().Color == colorController.CurrentColor
                    ? colorLineModifier
                    : 1;
-                addScore += colorBonus * diagonalModifier * combo * lines.leftDiag.Count;
+                addScore += colorBonus * diagonalModifier * comboModifier(combo) * lines.leftDiag.Count;
                 colorBonusApplied = colorBonus > 1;
-                combo++;
                 ShowFloatingScore(lines.leftDiag, addScore / lines.leftDiag.Count);
             }
 
             if (lines.rightDiag.Count >= minLength)
             {
+                combo++;
                 colorBonus = lines.rightDiag[0].ball.GetComponentInChildren<Ball>().Color == colorController.CurrentColor
                   ? colorLineModifier
                   : 1;
-                addScore += colorBonus * diagonalModifier * combo * lines.rightDiag.Count;
+                addScore += colorBonus * diagonalModifier * comboModifier(combo) * lines.rightDiag.Count;
                 colorBonusApplied = colorBonus > 1;
-                combo++;
                 ShowFloatingScore(lines.rightDiag, addScore / lines.rightDiag.Count);
             }
+
+            ///Debug.Log(combo +" " + comboModifier(combo));
             
             if (colorBonusApplied)
             {
@@ -89,7 +91,7 @@ public class ScoreController : MonoBehaviour {
         }
         else
         {
-            combo = 1;
+            combo = 0;
             addScore = 1;
         }
 
@@ -142,5 +144,10 @@ public class ScoreController : MonoBehaviour {
             score += number;
             ScoreText.text = score.ToString();
         }
+    }
+
+    private int comboModifier(int combo)
+    {
+        return (combo) * 2 + 2;
     }
 }
