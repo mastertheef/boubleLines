@@ -119,6 +119,7 @@ public class ScoreController : MonoBehaviour {
     public void ResetScore()
     {
         score = 0;
+        HighScoreText.text = FileController.GetHighScore().ToString();
         ScoreText.text = string.Format("{0}", score);
     }
 
