@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Monetization;
 using UnityEngine.Advertisements;
+using UnityEngine.UI;
 
 public class AdsController : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class AdsController : MonoBehaviour
     private GameOverController gameoverController;
 
     [SerializeField] bool testMode = true;
+    [SerializeField] Text adIdText;
 
     // Start is called before the first frame update
     void Start()

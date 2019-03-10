@@ -6,12 +6,14 @@ using UnityEngine.UI;
 public class GameOverController : MonoBehaviour {
 
     [SerializeField] private Canvas GameOverGUI;
+    [SerializeField] private Canvas PopupGUI;
     [SerializeField] private Image BackGround;
     [SerializeField] private Text TotalCoinsText;
     [SerializeField] private Text ScoreText;
     [SerializeField] private Text HighScoreText;
     [SerializeField] private Text RewardText;
     [SerializeField] private Button DoubleRewardButton;
+    [SerializeField] private GameObject ColorMatchBonusPrefab;
 
     private ScoreController scoreController;
     private BackColorController backColorController;
@@ -28,6 +30,7 @@ public class GameOverController : MonoBehaviour {
         gameController = GameObject.Find("GameController").GetComponent<GameController>();
         soundController = GameObject.Find("SoundController").GetComponent<SoundController>();
         popupController = GameObject.Find("PopupController").GetComponent<PopupController>();
+        DoubleRewardButton.interactable = FindObjectOfType<AdsController>() != null;
     }
 	
     public void GameOver()
@@ -40,9 +43,24 @@ public class GameOverController : MonoBehaviour {
         StartCoroutine(ColorMatchBonus());
     }
 
+    public void DoubleReward()
+    {
+        int score = scoreController.Score;
+        reward *= 2;
+        RewardText.text = string.Format("Reward: {0}", reward); // maybe some animation ...
+        int coins = FileController.GetCoins();
+        FileController.SetCoins(coins + reward);
+        DoubleRewardButton.enabled = false;
+    }
+
     private IEnumerator ColorMatchBonus()
     {
         yield return new WaitForSeconds(1.5f);
+        popupController.DarkenScreen();
+        var colorMatchText = Instantiate(ColorMatchBonusPrefab, PopupGUI.transform);
+        yield return new WaitForSeconds(2f);
+        popupController.UnDarkenScreen();
+        Destroy(colorMatchText);
         var currentColor = backColorController.CurrentColor;
         var colorMatchNodes = gameController.tileGraph.nodesWithBalls.Where(x => x.ball.GetComponentInChildren<Ball>().Color == currentColor).ToList();
 
@@ -79,15 +97,5 @@ public class GameOverController : MonoBehaviour {
         }
 
         FileController.SetCoins(coins + reward);
-    }
-
-    public void DoubleReward()
-    {
-        int score = scoreController.Score;
-        reward *= 2;
-        RewardText.text = string.Format("Reward: {0}", reward); // maybe some animation ...
-        int coins = FileController.GetCoins();
-        FileController.SetCoins(coins + reward);
-        DoubleRewardButton.enabled = false;
     }
 }

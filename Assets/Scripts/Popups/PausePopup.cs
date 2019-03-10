@@ -17,41 +17,31 @@ public class PausePopup : PopupBase {
 
     private void Awake()
     {
+        soundController = GameObject.Find("SoundController").GetComponent<SoundController>();
+        gameController = GameObject.Find("GameController").GetComponent<GameController>();
         currentSettings = FileController.GetSettings();
-        UpdateToggle(SoundToggle, currentSettings.SoundOn);
-        UpdateToggle(MusicToggle, currentSettings.MusicOn);
+        SoundToggle.isOn = !currentSettings.SoundOn;
+        MusicToggle.isOn = !currentSettings.MusicOn;
+        
     }
 
     // Use this for initialization
     void Start () {
         base.Start();
-       
-        soundController = GameObject.Find("SoundController").GetComponent<SoundController>();
-        gameController = GameObject.Find("GameController").GetComponent<GameController>();
-    }
-	
-    private void UpdateToggle(Toggle toggle, bool value)
-    {
-        var offImage = toggle.transform.Find("Background").Find("OffImage").GetComponent<Image>();
-        if (offImage != null)
-        {
-            offImage.enabled = !value;
-        }
     }
 
     public void SoundToggleValueChanged()
     {
-        UpdateToggle(SoundToggle, SoundToggle.isOn);
-        currentSettings.SoundOn = SoundToggle.isOn;
+        currentSettings.SoundOn = !SoundToggle.isOn;
         FileController.SetSettings(currentSettings);
+        soundController.MuteSound(SoundToggle.isOn);
     }
 
     public void MusicToggleValueChanged()
     {
-        UpdateToggle(MusicToggle, MusicToggle.isOn);
-        currentSettings.MusicOn = MusicToggle.isOn;
+        currentSettings.MusicOn = !MusicToggle.isOn;
         FileController.SetSettings(currentSettings);
-        soundController.SetBubbleVolume(MusicToggle.isOn ? 1 : 0);
+        soundController.MuteMusic(MusicToggle.isOn);
     }
 
     public void Restart()
@@ -62,7 +52,7 @@ public class PausePopup : PopupBase {
 
     public void Home()
     {
-        GameObject.Find("SceneFader").GetComponent<SceneFader>().FaedTo("HomeScene");
+        GameObject.Find("SceneFader").GetComponent<SceneFader>().FadeTo("HomeScene");
         //SceneManager.LoadScene("HomeScene");
     }
 }

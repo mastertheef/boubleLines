@@ -32,7 +32,7 @@ public class SceneFader : MonoBehaviour
         SceneManager.LoadScene(sceneName);
     }
 
-    public void FaedTo(string sceneName)
+    public void FadeTo(string sceneName)
     {
         StartCoroutine(fadeTo(sceneName));
     }

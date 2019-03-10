@@ -12,7 +12,8 @@ public enum Popups
     Pause,
     GameOver,
     NewRecord,
-    Shop
+    Shop,
+    Help
 }
 
 public class PopupController : MonoBehaviour {
@@ -23,6 +24,7 @@ public class PopupController : MonoBehaviour {
     [SerializeField] private GameOverPopup gameOverPopup;
     [SerializeField] private NewRecordPopup newRecordPopup;
     [SerializeField] private ShopPopup shopPopup;
+    [SerializeField] private HelpPopup helpPopup;
 
     [SerializeField] private Image popupDarken;
     private Stack<PopupBase> popups;
@@ -51,6 +53,9 @@ public class PopupController : MonoBehaviour {
 
         if (shopPopup != null)
             popupPool.Add(Popups.Shop, Instantiate(shopPopup, GUI.transform));
+
+        if (helpPopup != null)
+            popupPool.Add(Popups.Help, Instantiate(helpPopup, GUI.transform));
     }
 
     public void Show(PopupBase popup)
@@ -62,9 +67,22 @@ public class PopupController : MonoBehaviour {
         }
         popup.Show();
         popups.Push(popup);
-        popupDarken.enabled = true;
-        popupDarken.GetComponent<CanvasRenderer>().SetAlpha(0f);
-        popupDarken.CrossFadeAlpha(1f, 0.1f, false);
+        DarkenScreen();
+    }
+
+    public void DarkenScreen()
+    {
+        if (!popupDarken.enabled)
+        {
+            popupDarken.enabled = true;
+            popupDarken.GetComponent<CanvasRenderer>().SetAlpha(0f);
+            popupDarken.CrossFadeAlpha(1f, 0.1f, false);
+        }
+    }
+
+    public void UnDarkenScreen()
+    {
+        StartCoroutine(HideDarken());
     }
 
     public void Close()
@@ -134,7 +152,6 @@ public class PopupController : MonoBehaviour {
         popupDarken.CrossFadeAlpha(0f, 0.1f, false);
         yield return new WaitForSeconds(1);
         popupDarken.enabled = false;
-       
     }
 
     private void OnDestroy()

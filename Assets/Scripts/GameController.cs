@@ -71,7 +71,8 @@ public class GameController : MonoBehaviour
         }
 
         currentSettings = FileController.GetSettings();
-        soundController.SetBubbleVolume(currentSettings.SoundOn ? 1 : 0);
+        soundController.MuteMusic(!currentSettings.MusicOn);
+        soundController.MuteSound(!currentSettings.SoundOn);
 
         var move = new MoveState();
 

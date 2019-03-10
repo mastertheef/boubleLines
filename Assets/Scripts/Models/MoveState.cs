@@ -16,7 +16,7 @@ namespace Assets.Scripts.Models
         {
             x = node.x;
             y = node.y;
-            Color = node.ball.GetComponentInChildren<Ball>().Color;
+            Color = node.ball != null? node.ball.GetComponentInChildren<Ball>().Color: Color.white;
         }
     }
 

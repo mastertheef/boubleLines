@@ -7,12 +7,16 @@ public class SettingsPopup : PopupBase {
     [SerializeField] private Toggle SoundToggle;
 
     Settings currentSettings;
+    SoundController soundController;
+    PopupController popupController;
 
     private void Awake()
     {
         currentSettings = FileController.GetSettings();
-        UpdateToggle(SoundToggle, currentSettings.SoundOn);
-        UpdateToggle(MusicToggle, currentSettings.MusicOn);
+        soundController = FindObjectOfType<SoundController>();
+        popupController = FindObjectOfType<PopupController>();
+        soundController.MuteMusic(!currentSettings.MusicOn);
+        soundController.MuteSound(!currentSettings.SoundOn);
     }
 
     public override void Show()
@@ -20,27 +24,23 @@ public class SettingsPopup : PopupBase {
         var settings = FileController.GetSettings();
         base.Show();
     }
-
-    private void UpdateToggle(Toggle toggle, bool value)
-    {
-        var offImage = toggle.transform.Find("Background").Find("OffImage").GetComponent<Image>();
-        if (offImage != null)
-        {
-            offImage.enabled = !value;
-        }
-    }
-
+    
     public void SoundToggleValueChanged()
     {
-        UpdateToggle(SoundToggle, SoundToggle.isOn);
-        currentSettings.SoundOn = SoundToggle.isOn;
+        soundController.MuteSound(SoundToggle.isOn);
+        currentSettings.SoundOn = !SoundToggle.isOn;
         FileController.SetSettings(currentSettings);
     }
 
     public void MusicToggleValueChanged()
     {
-        UpdateToggle(MusicToggle, MusicToggle.isOn);
-        currentSettings.MusicOn = MusicToggle.isOn;
+        soundController.MuteMusic(MusicToggle.isOn);
+        currentSettings.MusicOn = !MusicToggle.isOn;
         FileController.SetSettings(currentSettings);
+    }
+
+    public void ShowHelp()
+    {
+        popupController.Show(Popups.Help);
     }
 }
