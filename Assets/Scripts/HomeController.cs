@@ -10,13 +10,23 @@ public class HomeController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        coinsText.text = FileController.GetCoins().ToString();
+        UpdateCoins();
     }
 	
 	public void StartGame()
     {
         //SceneManager.LoadScene("GameScene");
         GameObject.Find("SceneFader").GetComponent<SceneFader>().FadeTo("GameScene");
+    }
+
+    public void ContactDeveloper()
+    {
+        Application.OpenURL("https://docs.google.com/forms/d/1Wqfq4vemidne2QwA8QyrtYdOF1mCJnqLw1PF-G_nKe8");
+    }
+
+    public void UpdateCoins()
+    {
+        coinsText.text = FileController.GetCoins().ToString();
     }
 
     public void RateUs()

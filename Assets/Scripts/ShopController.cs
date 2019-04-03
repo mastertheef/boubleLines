@@ -8,26 +8,13 @@ public class ShopController : MonoBehaviour, IStoreListener
 {
     private static IStoreController m_StoreController;          // The Unity Purchasing system.
     private static IExtensionProvider m_StoreExtensionProvider; // The store-specific Purchasing subsystems.
-
-    // Product identifiers for all products capable of being purchased: 
-    // "convenience" general identifiers for use with Purchasing, and their store-specific identifier 
-    // counterparts for use with and outside of Unity Purchasing. Define store-specific identifiers 
-    // also on each platform's publisher dashboard (iTunes Connect, Google Play Developer Console, etc.)
-
-    // General product identifiers for the consumable, non-consumable, and subscription products.
-    // Use these handles in the code to reference which product to purchase. Also use these values 
-    // when defining the Product Identifiers on the store. Except, for illustration purposes, the 
-    // kProductIDSubscription - it has custom Apple and Google identifiers. We declare their store-
-    // specific mapping to Unity Purchasing's AddProduct, below.
-    public static string kProductIDConsumable = "consumable";
-    public static string kProductIDNonConsumable = "nonconsumable";
-    public static string kProductIDSubscription = "subscription";
-
-    // Apple App Store-specific product identifier for the subscription product.
-    private static string kProductNameAppleSubscription = "com.unity3d.subscription.new";
-
-    // Google Play Store-specific product identifier subscription product.
-    private static string kProductNameGooglePlaySubscription = "com.unity3d.subscription.original";
+    
+    public const string rich100 = "rich100";
+    public const string rich500 = "rich500";
+    public const string rich1200 = "rich1200";
+    public const string rich2300 = "rich2300";
+    public const string rich5000 = "rich5000";
+    public const string rich10000 = "rich10000";
 
     void Start()
     {
@@ -51,15 +38,13 @@ public class ShopController : MonoBehaviour, IStoreListener
         // Create a builder, first passing in a suite of Unity provided stores.
         var builder = ConfigurationBuilder.Instance(StandardPurchasingModule.Instance());
 
-        builder.AddProduct(kProductIDConsumable, ProductType.Consumable);
-        //builder.AddProduct(kProductIDNonConsumable, ProductType.NonConsumable);
-        //builder.AddProduct(kProductIDSubscription, ProductType.Subscription, new IDs(){
-        //        { kProductNameAppleSubscription, AppleAppStore.Name },
-        //        { kProductNameGooglePlaySubscription, GooglePlay.Name },
-        //    });
+        builder.AddProduct(rich100, ProductType.Consumable);
+        builder.AddProduct(rich500, ProductType.Consumable);
+        builder.AddProduct(rich1200, ProductType.Consumable);
+        builder.AddProduct(rich2300, ProductType.Consumable);
+        builder.AddProduct(rich5000, ProductType.Consumable);
+        builder.AddProduct(rich10000, ProductType.Consumable);
 
-        // Kick off the remainder of the set-up with an asynchrounous call, passing the configuration 
-        // and this class' instance. Expect a response either in OnInitialized or OnInitializeFailed.
         UnityPurchasing.Initialize(this, builder);
     }
 
@@ -71,31 +56,12 @@ public class ShopController : MonoBehaviour, IStoreListener
     }
 
 
-    public void BuyConsumable()
+    public void BuyConsumable(string richId)
     {
         // Buy the consumable product using its general identifier. Expect a response either 
         // through ProcessPurchase or OnPurchaseFailed asynchronously.
-        BuyProductID(kProductIDConsumable);
+        BuyProductID(richId);
     }
-
-
-    public void BuyNonConsumable()
-    {
-        // Buy the non-consumable product using its general identifier. Expect a response either 
-        // through ProcessPurchase or OnPurchaseFailed asynchronously.
-        BuyProductID(kProductIDNonConsumable);
-    }
-
-
-    public void BuySubscription()
-    {
-        // Buy the subscription product using its the general identifier. Expect a response either 
-        // through ProcessPurchase or OnPurchaseFailed asynchronously.
-        // Notice how we use the general product identifier in spite of this ID being mapped to
-        // custom store-specific identifiers above.
-        BuyProductID(kProductIDSubscription);
-    }
-
 
     void BuyProductID(string productId)
     {
@@ -168,11 +134,6 @@ public class ShopController : MonoBehaviour, IStoreListener
         }
     }
 
-
-    //  
-    // --- IStoreListener
-    //
-
     public void OnInitialized(IStoreController controller, IExtensionProvider extensions)
     {
         // Purchasing has succeeded initializing. Collect our Purchasing references.
@@ -194,32 +155,35 @@ public class ShopController : MonoBehaviour, IStoreListener
 
     public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs args)
     {
-        // A consumable product has been purchased by this user.
-        if (string.Equals(args.purchasedProduct.definition.id, kProductIDConsumable, StringComparison.Ordinal))
+        int coins = FileController.GetCoins();
+        switch (args.purchasedProduct.definition.id)
         {
-            Debug.Log(string.Format("ProcessPurchase: PASS. Product: '{0}'", args.purchasedProduct.definition.id));
-        }
-        // Or ... a non-consumable product has been purchased by this user.
-        else if (string.Equals(args.purchasedProduct.definition.id, kProductIDNonConsumable, StringComparison.Ordinal))
-        {
-            Debug.Log(string.Format("ProcessPurchase: PASS. Product: '{0}'", args.purchasedProduct.definition.id));
-            // TODO: The non-consumable item has been successfully purchased, grant this item to the player.
-        }
-        // Or ... a subscription product has been purchased by this user.
-        else if (String.Equals(args.purchasedProduct.definition.id, kProductIDSubscription, StringComparison.Ordinal))
-        {
-            Debug.Log(string.Format("ProcessPurchase: PASS. Product: '{0}'", args.purchasedProduct.definition.id));
-            // TODO: The subscription item has been successfully purchased, grant this to the player.
-        }
-        // Or ... an unknown product has been purchased by this user. Fill in additional products here....
-        else
-        {
-            Debug.Log(string.Format("ProcessPurchase: FAIL. Unrecognized product: '{0}'", args.purchasedProduct.definition.id));
+            case rich100:
+                FileController.SetCoins(coins + 100);
+                break;
+            case rich500:
+                FileController.SetCoins(coins + 500);
+                break;
+            case rich1200:
+                FileController.SetCoins(coins + 1200);
+                break;
+            case rich2300:
+                FileController.SetCoins(coins + 2300);
+                break;
+            case rich5000:
+                FileController.SetCoins(coins + 5000);
+                break;
+            case rich10000:
+                FileController.SetCoins(coins + 10000);
+                break;
         }
 
-        // Return a flag indicating whether this product has completely been received, or if the application needs 
-        // to be reminded of this purchase at next app launch. Use PurchaseProcessingResult.Pending when still 
-        // saving purchased products to the cloud, and when that save is delayed. 
+        var homeController = FindObjectOfType<HomeController>();
+        if (homeController != null)
+        {
+            homeController.UpdateCoins();
+        }
+        
         return PurchaseProcessingResult.Complete;
     }
 

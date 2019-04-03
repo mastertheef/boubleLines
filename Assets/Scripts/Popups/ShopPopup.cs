@@ -4,5 +4,21 @@ using UnityEngine;
 
 public class ShopPopup : PopupBase
 {
-    // TODO: implement purchasing logic here after build
+    private ShopController shopController;
+
+    public override void Start()
+    {
+        base.Start();
+        shopController = FindObjectOfType<ShopController>();
+    }
+
+    public void Buy(string richId)
+    {
+        if (shopController != null)
+        {
+            shopController.BuyConsumable(richId);
+        }
+
+        ClosePopup();
+    }
 }
