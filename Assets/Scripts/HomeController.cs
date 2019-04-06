@@ -31,7 +31,7 @@ public class HomeController : MonoBehaviour {
 
     public void RateUs()
     {
-#if unity_android
+#if UNITY_ANDROID
         Application.OpenURL("market://details?id=com.QualityGeek.BubbleLines");
 #endif
     }

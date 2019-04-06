@@ -55,6 +55,14 @@ public class ShopController : MonoBehaviour, IStoreListener
         return m_StoreController != null && m_StoreExtensionProvider != null;
     }
 
+    public string GetPrice(string productId)
+    {
+        if (!IsInitialized()) return "N/I";
+        
+        var productMetadata = m_StoreController.products.WithID(productId).metadata;
+        return string.Format("{0} {1}", productMetadata.localizedPrice, productMetadata.isoCurrencyCode);
+    }
+
 
     public void BuyConsumable(string richId)
     {

@@ -98,4 +98,12 @@ public class GameOverController : MonoBehaviour {
 
         FileController.SetCoins(coins + reward);
     }
+    
+    public void RateUs()
+    {
+#if UNITY_ANDROID
+        Application.OpenURL("market://details?id=com.QualityGeek.BubbleLines");
+#endif
+    }
 }
+

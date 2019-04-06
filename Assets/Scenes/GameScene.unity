@@ -914,7 +914,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &353790808
 Transform:
   m_ObjectHideFlags: 0
@@ -941,7 +941,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 813c69b15960ebf4899333f2d47e3528, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  testMode: 1
+  testMode: 0
   adIdText: {fileID: 1489050159}
 --- !u!1 &519420028
 GameObject:
@@ -7446,6 +7446,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114200689732060452, guid: a27c96b72a9defe4bb33e0ae67985b35,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1086923876}
+    - target: {fileID: 114200689732060452, guid: a27c96b72a9defe4bb33e0ae67985b35,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: RateUs
       objectReference: {fileID: 0}
     - target: {fileID: 114972387384179876, guid: a27c96b72a9defe4bb33e0ae67985b35,
         type: 3}

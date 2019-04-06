@@ -39,7 +39,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 2200}
+  m_AnchoredPosition: {x: 0, y: 2356}
   m_SizeDelta: {x: 1138, y: 1329}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4622592272237158209
@@ -281,6 +281,7 @@ GameObject:
   - component: {fileID: 305244708439067405}
   - component: {fileID: 306714727796932229}
   - component: {fileID: 1909285140968966297}
+  - component: {fileID: 8758192446986409}
   m_Layer: 5
   m_Name: PriceText
   m_TagString: Untagged
@@ -430,6 +431,19 @@ MonoBehaviour:
   - {fileID: 0}
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &8758192446986409
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 440868957635390124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66eef013a2d6452458fb5b73ee84442e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  productId: rich2300
 --- !u!1 &863022850559031068
 GameObject:
   m_ObjectHideFlags: 0
@@ -1640,6 +1654,7 @@ GameObject:
   - component: {fileID: 512842927819730186}
   - component: {fileID: 2254404325750293229}
   - component: {fileID: 5789690218138195944}
+  - component: {fileID: 4676694815133371247}
   m_Layer: 5
   m_Name: PriceText
   m_TagString: Untagged
@@ -1789,6 +1804,19 @@ MonoBehaviour:
   - {fileID: 0}
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &4676694815133371247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2717933451762961618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66eef013a2d6452458fb5b73ee84442e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  productId: rich1200
 --- !u!1 &2753631758959116897
 GameObject:
   m_ObjectHideFlags: 0
@@ -1800,6 +1828,7 @@ GameObject:
   - component: {fileID: 8410356478999920016}
   - component: {fileID: 5583344672915585185}
   - component: {fileID: 2880387490822653243}
+  - component: {fileID: 6785974164603095644}
   m_Layer: 5
   m_Name: PriceText
   m_TagString: Untagged
@@ -1949,6 +1978,19 @@ MonoBehaviour:
   - {fileID: 0}
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &6785974164603095644
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2753631758959116897}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66eef013a2d6452458fb5b73ee84442e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  productId: rich100
 --- !u!1 &3187151572138420423
 GameObject:
   m_ObjectHideFlags: 0
@@ -3533,6 +3575,7 @@ GameObject:
   - component: {fileID: 2792735767053523057}
   - component: {fileID: 4316398813701301024}
   - component: {fileID: 2823522126459862446}
+  - component: {fileID: 7103804947823039288}
   m_Layer: 5
   m_Name: PriceText
   m_TagString: Untagged
@@ -3682,6 +3725,19 @@ MonoBehaviour:
   - {fileID: 0}
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &7103804947823039288
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7965993007246843608}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66eef013a2d6452458fb5b73ee84442e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  productId: rich5000
 --- !u!1 &8000538056110648677
 GameObject:
   m_ObjectHideFlags: 0
@@ -3693,6 +3749,7 @@ GameObject:
   - component: {fileID: 1975636797036317962}
   - component: {fileID: 5163914857981274017}
   - component: {fileID: 7317002351589442937}
+  - component: {fileID: 356466897387335679}
   m_Layer: 5
   m_Name: PriceText
   m_TagString: Untagged
@@ -3842,6 +3899,19 @@ MonoBehaviour:
   - {fileID: 0}
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &356466897387335679
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8000538056110648677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66eef013a2d6452458fb5b73ee84442e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  productId: rich500
 --- !u!1 &8086277329950002912
 GameObject:
   m_ObjectHideFlags: 0
@@ -4004,6 +4074,7 @@ GameObject:
   - component: {fileID: 5336600386680962730}
   - component: {fileID: 8429522151819496975}
   - component: {fileID: 8938764822871056378}
+  - component: {fileID: 2066106655199404578}
   m_Layer: 5
   m_Name: PriceText
   m_TagString: Untagged
@@ -4153,6 +4224,19 @@ MonoBehaviour:
   - {fileID: 0}
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &2066106655199404578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8232107597552237423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66eef013a2d6452458fb5b73ee84442e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  productId: rich10000
 --- !u!1 &8655287762388066135
 GameObject:
   m_ObjectHideFlags: 0

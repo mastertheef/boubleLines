@@ -136,7 +136,10 @@ public class PopupController : MonoBehaviour {
 
     public void ShowShop()
     {
-        Show(Popups.Shop);
+        if (Application.internetReachability != NetworkReachability.NotReachable)
+        {
+            Show(Popups.Shop);   
+        }
     }
 
     public void Show(Popups popupType)
