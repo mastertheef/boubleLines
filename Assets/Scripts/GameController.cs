@@ -94,8 +94,7 @@ public class GameController : MonoBehaviour
         int height = currentMatrix.GetLength(1);
         int emptyCount = width * height - tileGraph.nodesWithBalls.Count;
         int ballsGenerated = 0;
-        var result = new List<Node>();
-
+        
         while (ballsGenerated < count && emptyCount != 0)
         {
             var coords = new Vector2(Random.Range(0, width), Random.Range(0, height));
@@ -104,25 +103,31 @@ public class GameController : MonoBehaviour
                 ballsGenerated++;
                 emptyCount--;
 
-                if (move != null)
-                {
-                    move.Appeared.Add(new BallState(tileGraph.tileNodes[(int)coords.x, (int)coords.y]));
-                }
-                var lines = tileGraph.FindLines(tileGraph.tileNodes[(int)coords.x, (int)coords.y], lineLength);
-
-                if (lines.HaveLines(lineLength))
-                {
-                    int scoreAdded = scoreController.AddScore(lines, lineLength);
-                    tileGraph.DestroyBalls(lines, tileGraph.tileNodes[(int)coords.x, (int)coords.y]);
-                    tileGraph.InitNeighbours();
-                    soundController.PlayDestroy();
-                    if (move != null)
-                    {
-                        move.AddDestroyedAfterAppear(lines.GetAll(lineLength));
-                        move.ScoreAdded += scoreAdded;
-                    }
-                }
+                StartCoroutine(AddBallReaction(move, coords));
             }
+        }
+    }
+
+    IEnumerator AddBallReaction(MoveState move, Vector2 coords)
+    {
+        yield return new WaitForSeconds(0.5f);
+        if (move != null)
+        {
+            move.Appeared.Add(new BallState(tileGraph.tileNodes[(int)coords.x, (int)coords.y]));
+        }
+        var lines = tileGraph.FindLines(tileGraph.tileNodes[(int)coords.x, (int)coords.y], lineLength);
+
+        if (lines.HaveLines(lineLength))
+        {
+            int scoreAdded = scoreController.AddScore(lines, lineLength);
+            if (move != null)
+            {
+                move.AddDestroyedAfterAppear(lines.GetAll(lineLength));
+                move.ScoreAdded += scoreAdded;
+            }
+            tileGraph.DestroyBalls(lines, tileGraph.tileNodes[(int)coords.x, (int)coords.y]);
+            tileGraph.InitNeighbours();
+            soundController.PlayDestroy();
         }
     }
 
@@ -183,7 +188,7 @@ public class GameController : MonoBehaviour
 
             if (hit.collider != null)
             {
-                if (hit.transform.tag == "Tile")
+                if (hit.transform.CompareTag("Tile"))
                 {
                     var tile = hit.transform.gameObject.GetComponent<TileView>();
 
@@ -217,6 +222,7 @@ public class GameController : MonoBehaviour
 
     private void OnBallMoved(Node start, Node end)
     {
+        tileGraph.InitNeighbours();
         var move = new MoveState
         {
             Start = start,

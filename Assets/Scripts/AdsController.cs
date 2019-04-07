@@ -7,9 +7,9 @@ using UnityEngine.UI;
 
 public class AdsController : MonoBehaviour
 {
-    private const string storeId = "3050293";
+    private const string storeId = "3050305";
     private const string rewardedVideo = "rewardedVideo";
-    private const string banner = "Banner";
+    private const string banner = "banner";
 
     private GameOverController gameoverController;
 

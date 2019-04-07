@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using UnityEngine;
 
 public class TileGraph : MonoBehaviour {
@@ -64,11 +65,6 @@ public class TileGraph : MonoBehaviour {
                 }
             }
         }
-
-        //foreach (var node in nodesWithBalls)
-        //{
-        //    node.tile.GetComponent<SpriteRenderer>().color = Color.red;
-        //}
     }
 
     public void AddBall(int x, int y, GameObject ball)
@@ -149,10 +145,11 @@ public class TileGraph : MonoBehaviour {
     public void DestroyBalls(FoundLines lines, Node startNode)
     {
         List<Node> nodeBallsToDestroy = new List<Node>();
-        nodeBallsToDestroy.AddRange(lines.horizontal);
-        nodeBallsToDestroy.AddRange(lines.vertical);
-        nodeBallsToDestroy.AddRange(lines.leftDiag);
-        nodeBallsToDestroy.AddRange(lines.rightDiag);
+        nodeBallsToDestroy.AddRange(lines.GetAll(5));
+//        nodeBallsToDestroy.AddRange(lines.horizontal);
+//        nodeBallsToDestroy.AddRange(lines.vertical);
+//        nodeBallsToDestroy.AddRange(lines.leftDiag);
+//        nodeBallsToDestroy.AddRange(lines.rightDiag);
 
         DestroyBalls(nodeBallsToDestroy, startNode);
     }
@@ -189,39 +186,39 @@ public class TileGraph : MonoBehaviour {
     public FoundLines FindLines(Node node, int minLineLength)
     {
         var result = new FoundLines();
+        var color = node.ball.GetComponentInChildren<Ball>().Color;
 
-        List<Node> nodeBallsToDestroy = new List<Node>();
         // hirizintal line
-        var horizontalLine = getLine(node, new Vector2(0, 1));
-        horizontalLine.AddRange(getLine(node, new Vector2(0, -1)));
-        horizontalLine = horizontalLine.Distinct().ToList();
+        var horizontalLine = getLine(node, new Vector2(0, 1), color);
+        horizontalLine.AddRange(getLine(node, new Vector2(0, -1), color));
+        horizontalLine.Add(node);
 
         result.horizontal = (horizontalLine.Count >= minLineLength)
             ? horizontalLine
             : new List<Node>();
 
         // vertical line
-        var verticalLine = getLine(node, new Vector2(1, 0));
-        verticalLine.AddRange(getLine(node, new Vector2(-1, 0)));
-        verticalLine = verticalLine.Distinct().ToList();
+        var verticalLine = getLine(node, new Vector2(1, 0), color);
+        verticalLine.AddRange(getLine(node, new Vector2(-1, 0), color));
+        verticalLine.Add(node);
 
         result.vertical = (verticalLine.Count >= minLineLength)
             ? verticalLine
             : new List<Node>();
 
         // right diagonal
-        var rightDiag = getLine(node, new Vector2(1, 1));
-        rightDiag.AddRange(getLine(node, new Vector2(-1, -1)));
-        rightDiag = rightDiag.Distinct().ToList();
+        var rightDiag = getLine(node, new Vector2(1, 1), color);
+        rightDiag.AddRange(getLine(node, new Vector2(-1, -1), color));
+        rightDiag.Add(node);
 
         result.rightDiag = (rightDiag.Count >= minLineLength)
             ? rightDiag
             : new List<Node>();
 
         // right diagonal
-        var leftDiag = getLine(node, new Vector2(1, -1));
-        leftDiag.AddRange(getLine(node, new Vector2(-1, 1)));
-        leftDiag = leftDiag.Distinct().ToList();
+        var leftDiag = getLine(node, new Vector2(1, -1), color);
+        leftDiag.AddRange(getLine(node, new Vector2(-1, 1), color));
+        leftDiag.Add(node);
 
         result.leftDiag = (leftDiag.Count >= minLineLength)
             ? leftDiag
@@ -231,19 +228,21 @@ public class TileGraph : MonoBehaviour {
     }
 
 
-    private List<Node> getLine(Node node, Vector2 direction)
+    private List<Node> getLine(Node node, Vector2 direction, Color color)
     {
         List<Node> line = new List<Node>();
         var currentNode = node;
-        line.Add(currentNode);
+        
         int neighbourX = currentNode.x + (int)direction.x;
         int neighbourY = currentNode.y + (int)direction.y;
         var neighbourNode = IsInBounds(neighbourX, neighbourY)
             ? tileNodes[neighbourX, neighbourY]
             : null;
 
-        while (currentNode != null && neighbourNode != null &&
-            currentNode.ball != null && neighbourNode.ball != null && currentNode.ball.GetComponentInChildren<Ball>().Color == neighbourNode.ball.GetComponentInChildren<Ball>().Color)
+        while (neighbourNode != null &&
+            currentNode.ball != null && 
+            neighbourNode.ball != null && 
+            neighbourNode.ball.GetComponentInChildren<Ball>().Color == color)
         {
             line.Add(neighbourNode);
             neighbourX += (int)direction.x;
@@ -254,7 +253,7 @@ public class TileGraph : MonoBehaviour {
             ? tileNodes[neighbourX, neighbourY]
             : null;
         }
-
+        
         return line;
     }
 
